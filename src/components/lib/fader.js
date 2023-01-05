@@ -3,7 +3,8 @@ import { Slider, Rail, Handles, Tracks } from "react-compound-slider"
 import { KeyboardHandle, SliderRail, Track } from "./slidercomponents.js"
 import Label from './label'
 import { Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap"
-import NumberFormat from "react-number-format"
+//import NumberFormat from "react-number-format"
+import * as ReactNumberFormat from "react-number-format";
 
 function preventDefault(e) {
   e.preventDefault()
@@ -156,7 +157,7 @@ class Fader extends React.Component {
           </Slider>
         </Col>
         </Row>
-        <Row noGutters="true" className="justify-content-center"><Col md="auto"><NumberFormat
+        <Row noGutters="true" className="justify-content-center"><Col md="auto"><ReactNumberFormat.NumericFormat
           onValueChange={this.onTextValueChange} value={this.formatVal(this.toVal(updates[0]))} style={{
           color: "white",
           backgroundColor: "black",

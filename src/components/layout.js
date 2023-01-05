@@ -29,16 +29,18 @@ const Layout = ({ children,pageInfo }) => (
           <html lang="en" />
         </Helmet>
         <Container fluid="false">
-        <Row><Col></Col><Col md="auto">
-           <Row>
-             <Header siteTitle={data.site.siteMetadata.title} />
-           </Row>
-           <Row className="justify-content-md-center">
-          {children}
-           </Row>
-           </Col>
-           <Col></Col>
-        </Row>
+          <Row>
+            <Col></Col>
+            <Col md="auto">
+              <Row>
+                <Header siteTitle={data.site.siteMetadata.title} />
+              </Row>
+              <Row className="justify-content-md-center">
+                {children}
+              </Row>
+            </Col>
+            <Col></Col>
+          </Row>
         </Container>
       </>
     )}

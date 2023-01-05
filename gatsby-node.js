@@ -14,12 +14,14 @@ exports.onCreateWebpackConfig = ({
 }) => {
 
   actions.setWebpackConfig({
-    node: {
-      dgram: 'empty'
-    }
+    resolve: {
+      fallback: {
+        dgram: false,
+      }
+    },
   })
 
-  if (stage === "build-html") {
+  if (stage === "build-html" || stage === 'develop-html') {
     actions.setWebpackConfig({
       module: {
         rules: [
@@ -31,4 +33,5 @@ exports.onCreateWebpackConfig = ({
       },
     })
   }
+
 };

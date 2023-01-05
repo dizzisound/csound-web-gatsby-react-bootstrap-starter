@@ -134,12 +134,12 @@ const IndexPage = () => {
         <Row>
           <Col>
             <CsoundInstr csoundwasm={withPrefix("csound.esm.js")}
-                         inst={inst}
-                         osc="rsw"
-                         keyboard="rsw"
-                         csd={withPrefix("rspline.csd")}
-                         plugins={[]}
-                         tunings={tunings} />
+                        inst={inst}
+                        osc="rsw"
+                        keyboard="rsw"
+                        csd={withPrefix("rspline.csd")}
+                        plugins={[]}
+                        tunings={tunings} />
           </Col>
         </Row>
       </Col>
