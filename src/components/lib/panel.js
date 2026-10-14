@@ -7,7 +7,7 @@ import TabPanel from "./tabpanel"
 import NumberInput from "./numberinput"
 import Toggle from "./toggle"
 import Adsr from "./adsr"
-import XY from "./xy"
+import XYPad from "./xy"
 
 class Panel extends React.Component {
 
@@ -100,7 +100,7 @@ class Panel extends React.Component {
             break
           case "xy":
             components.push(
-              <XY def={component} key={component.id} onChange={this.onChange.bind(this)} />,
+              <XYPad def={component} key={component.id} onChange={this.onChange.bind(this)} />,
             )
             break
           case "adsr":

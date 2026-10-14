@@ -27,10 +27,6 @@ class Knob extends React.Component {
   }
 
   render() {
-    const tooltip = (this.props.def.tooltip?this.props.def.tooltip:'')
-      + (this.props.def.midictrl?' ctrl:'+this.props.def.midictrl:'')
-      + (this.props.def.osc? ' osc:/'+this.props.def.osc+'/'+this.props.def.id:'')
-
     let ret = (
       <Col className="colknob">
         <Row className="g-0 justify-content-center">

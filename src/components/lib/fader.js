@@ -2,7 +2,7 @@ import React from "react"
 import { Slider, Rail, Handles, Tracks } from "react-compound-slider"
 import { KeyboardHandle, SliderRail, Track } from "./slidercomponents.js"
 import Label from './label'
-import { Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap"
+import { Row, Col } from "react-bootstrap"
 //import NumberFormat from "react-number-format"
 import * as ReactNumberFormat from "react-number-format";
 
@@ -102,9 +102,6 @@ class Fader extends React.Component {
     const {
       state: { values, updates },
     } = this
-    const tooltip = (this.props.def.tooltip?this.props.def.tooltip:'')
-      + (this.props.def.midictrl?' ctrl:'+this.props.def.midictrl:'')
-      + (this.props.def.osc?' osc:/'+this.props.def.osc+'/'+this.props.def.id:'')
     return (
       <Col className="colfader">
         <Row className="g-0 justify-content-center">

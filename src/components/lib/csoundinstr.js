@@ -304,7 +304,8 @@ class CsoundInstr extends React.Component {
 
   handleMidiSelect = (device) => {
     console.log("selected: ", device.value.name)
-    this.state.currentDevice.value.onmidimessage = undefined
+    const prevDevice = this.state.currentDevice
+    prevDevice.value.onmidimessage = undefined
     this.setState({currentDevice: device})
     device.value.onmidimessage = this.onMidiEvent.bind(this)
   }

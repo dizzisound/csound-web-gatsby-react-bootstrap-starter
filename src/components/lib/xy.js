@@ -78,9 +78,9 @@ class XY extends React.Component {
     return (
       <Col>
         <Row>
-          <Label tooltip={'ctrl:100 osc:/'+this.props.def.osc+'/'+this.props.def.id+'/'+'x'} label="x:"/>
+          <Label tooltip={'ctrl:100 osc:/'+this.props.def.osc+'/'+this.props.def.id+'/x'} label="x:"/>
           <Col>{this.round(this.state.x)}</Col>
-          <Label tooltip={'ctrl 101 osc:/'+this.props.def.osc+'/'+this.props.def.id+'/'+'y'} label="y:"/>
+          <Label tooltip={'ctrl 101 osc:/'+this.props.def.osc+'/'+this.props.def.id+'/y'} label="y:"/>
           <Col>{this.round(-this.state.y)}</Col>
         </Row>
         <Row className="g-0">
