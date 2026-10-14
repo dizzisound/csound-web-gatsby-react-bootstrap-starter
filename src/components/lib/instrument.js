@@ -118,7 +118,7 @@ class Instrument extends React.Component {
     )
     return (
       <>
-        <Row noGutters="true" className="inst">
+        <Row className="g-0 inst">
           {components}
         </Row>
         <Row>

@@ -107,10 +107,10 @@ class Fader extends React.Component {
       + (this.props.def.osc?' osc:/'+this.props.def.osc+'/'+this.props.def.id:'')
     return (
       <Col className="colfader">
-        <Row noGutters="true" className="justify-content-center">
+        <Row className="g-0 justify-content-center">
           <Label tooltip={this.props.def.tooltip} label={this.props.def.label}/>
         </Row>
-        <Row noGutters="true" className="justify-content-center"><Col md="auto">
+        <Row className="g-0 justify-content-center"><Col md="auto">
           <Slider
             rootStyle={this.sliderStyle}
             domain={this.domain} // [min, max]
@@ -157,7 +157,7 @@ class Fader extends React.Component {
           </Slider>
         </Col>
         </Row>
-        <Row noGutters="true" className="justify-content-center"><Col md="auto"><ReactNumberFormat.NumericFormat
+        <Row className="g-0 justify-content-center"><Col md="auto"><ReactNumberFormat.NumericFormat
           onValueChange={this.onTextValueChange} value={this.formatVal(this.toVal(updates[0]))} style={{
           color: "white",
           backgroundColor: "black",

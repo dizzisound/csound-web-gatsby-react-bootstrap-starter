@@ -31,10 +31,10 @@ class Switch extends React.Component {
     )
     let ret = (
       <Col className="colselect">
-        <Row noGutters="true" className="justify-content-center">
+        <Row className="g-0 justify-content-center">
           <Label tooltip={this.props.def.tooltip} label={this.props.def.label}/>
         </Row>
-        <Row noGutters="true" className="justify-content-center">
+        <Row className="g-0 justify-content-center">
           <Col xs="auto">
             <ToggleButtonGroup vertical={this.props.vertical} size="sm" className="selectbtngroup"
                                name={"select-" + this.props.def.label} type="radio" value={this.state.value}
@@ -47,7 +47,7 @@ class Switch extends React.Component {
     )
     if (this.props.vertical) {
       ret = (
-        <Row noGutters>{ret}</Row>
+        <Row className="g-0">{ret}</Row>
       )
     }
     return ret

@@ -33,10 +33,10 @@ class Knob extends React.Component {
 
     let ret = (
       <Col className="colknob">
-        <Row noGutters="true" className="justify-content-center">
+        <Row className="g-0 justify-content-center">
           <Label tooltip={this.props.def.tooltip} label={this.props.def.label}/>
         </Row>
-        <Row noGutters="true" className="justify-content-center">
+        <Row className="g-0 justify-content-center">
           <Col xs="auto">
             <BasicKnob digits={this.props.def.digits} min={this.props.def.min} max={this.props.def.max}
                        step={this.props.def.step} inputColor="#FFFFFF" fgColor="#0077FF"

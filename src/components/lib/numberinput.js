@@ -28,12 +28,12 @@ class NumberInput extends React.Component {
   render() {
     let ret = (
       <Col className="colnumberinput">
-        <Row noGutters="true" className="justify-content-center dbyellow">
+        <Row className="g-0 justify-content-center dbyellow">
           <Col md="auto">
             <Label tooltip={this.props.def.tooltip} label={this.props.def.label}/>
           </Col>
         </Row>
-        <Row noGutters="true" className="justify-content-center"><Col md="auto">
+        <Row className="g-0 justify-content-center"><Col md="auto">
           <NumericInput strict={true} size={this.props.def.size} style={{ input: { textAlign: "center" } }}
                         value={this.state.value}
                         min={this.props.def.min} max={this.props.def.max} step={this.props.def.step}
@@ -45,7 +45,7 @@ class NumberInput extends React.Component {
     )
     if (this.props.vertical) {
       ret = (
-        <Row noGutters="true">{ret}</Row>
+        <Row className="g-0">{ret}</Row>
       )
     }
     return ret

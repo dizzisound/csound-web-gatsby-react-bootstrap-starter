@@ -387,7 +387,7 @@ class CsoundInstr extends React.Component {
             <Instrument osc={this.props.osc} inst={this.inst} onChange={this.handleUpdate.bind(this)}
                         ref={ref => this.instrument.current = ref}/>
           </Col></Row>
-          <Row style={{marginBottom: 5}} noGutters="true" className="instfooter">
+          <Row style={{marginBottom: 5}} className="g-0 instfooter">
             <Col style={{margin: 'auto', textAlign: 'left'}} md='auto'>Computer keyboard settings:</Col>
             <Col style={{margin: 'auto', textAlign: 'right'}}>Vel:&nbsp;&nbsp;</Col>
             <Col><HFader onChange={this.onVelChange.bind(this)} defval={100} min={0} max={127}

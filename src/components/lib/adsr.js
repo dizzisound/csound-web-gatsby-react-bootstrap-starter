@@ -108,7 +108,7 @@ class Adsr extends React.Component {
     const st = { width: "100%", padding: 0, marginTop: 0 };
     return (
       <Col xs="auto" className="patcol">
-        <Row noGutters>
+        <Row className="g-0">
           <Col className="patlabel">
             {!this.props.def.on?this.props.def.label:(
               <Button style={st} size="sm" variant={this.state.on ? "primary" : "secondary"}
@@ -119,7 +119,7 @@ class Adsr extends React.Component {
             }
           </Col>
         </Row>
-        <Row noGutters style={{ flexWrap: "nowrap" }}>
+        <Row className="g-0" style={{ flexWrap: "nowrap" }}>
           <Knob def={this.components[this.ida]} key={this.components[this.ida].id}
                 onChange={this.onChange.bind(this)} />
           <Knob def={this.components[this.idd]} key={this.components[this.idd].id}
@@ -129,7 +129,7 @@ class Adsr extends React.Component {
           <Knob def={this.components[this.idr]} key={this.components[this.idr].id}
                 onChange={this.onChange.bind(this)} />
         </Row>
-        <Row noGutters>
+        <Row className="g-0">
           <LinePlot data={this.state.data} width={140} height={32} />
         </Row>
       </Col>

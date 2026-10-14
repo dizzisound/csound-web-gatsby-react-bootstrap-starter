@@ -83,7 +83,7 @@ class XY extends React.Component {
           <Label tooltip={'ctrl 101 osc:/'+this.props.def.osc+'/'+this.props.def.id+'/'+'y'} label="y:"/>
           <Col>{this.round(-this.state.y)}</Col>
         </Row>
-        <Row noGutters>
+        <Row className="g-0">
           <Col style={{ backgroundColor: "#FDF6E3" }}>
             <Stage width={this.h + 2} height={this.h + 2}>
               <Layer>
