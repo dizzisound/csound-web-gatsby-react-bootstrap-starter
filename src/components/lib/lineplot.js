@@ -3,10 +3,6 @@ import { Col } from "react-bootstrap"
 import { Stage, Layer, Shape, Rect } from "react-konva"
 
 class LinePlot extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   draw(context, shape, arr) {
     if(!arr) return;
     if (arr.length === 0) return

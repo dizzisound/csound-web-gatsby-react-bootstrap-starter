@@ -3,10 +3,6 @@ import { Col } from "react-bootstrap"
 import { Stage, Layer, Shape } from "react-konva"
 
 class FuncPlot extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   downsample(arr, len) {
     let ret = []
     let pos = 1

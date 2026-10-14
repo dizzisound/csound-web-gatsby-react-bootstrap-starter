@@ -85,7 +85,6 @@ const Terpstra = (props) => {
     let keys = {};
     const labels = ["C", "Db/C#", "D", "Eb/D#", "E", "F", "Gb/F#", "G", "Ab/G#", "A", "Bb/A#", "B"];
     let currentNr = 0;
-    let touchedColor = "blue";
     for (let x = 1; x <= 40; x++) {
       let ynr = currentNr;
       for (let y = 10; y > 0; y--) {
@@ -154,7 +153,6 @@ const Terpstra = (props) => {
   const createKeys31 = () => {
     let keys = {};
     let currentNr = 0;
-    let touchedColor = "blue";
     for (let x = 1; x <= 40; x++) {
       let ynr = currentNr;
       for (let y = 15; y > 0; y--) {
@@ -236,6 +234,8 @@ const Terpstra = (props) => {
         g = p;
         b = q;
         break;
+      default:
+        break;
     }
     return {
       r: Math.round(r * 255),
@@ -246,7 +246,6 @@ const Terpstra = (props) => {
   const createKeys53 = () => {
     let keys = {};
     let currentNr = 0;
-    let touchedColor = "blue";
     let rgbs = [];
     for (let k = 0; k < 53; k++) {
       rgbs[k] = HSVtoRGB(scale[k][0] / scale[k][1] - 1, 0.5, 1);
@@ -347,6 +346,8 @@ const Terpstra = (props) => {
       break;
     case 3:
       keys = createKeys(true);
+      break;
+    default:
       break;
   }
   const shapes = Object.values(keys).map(key => {

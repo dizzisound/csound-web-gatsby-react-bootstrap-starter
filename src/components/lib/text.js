@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col } from 'react-bootstrap'
+import { Col } from 'react-bootstrap'
 class Text extends React.Component {
   constructor(props) {
     super(props);

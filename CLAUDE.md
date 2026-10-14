@@ -18,7 +18,9 @@ npm run format       # prettier --write over src/**/*.{js,jsx}
 npx gatsby clean     # clear .cache/ and public/ (do this before a deploy build)
 ```
 
-There are no tests and no linter (`npm test` is a placeholder echo). Verify changes by running the dev server and checking that the status cell shows "Csound running".
+There are no tests (`npm test` is a placeholder echo). Verify changes with `npm run build`, then the dev server, checking that the status cell shows "Csound running".
+
+There is no lint script or `.eslintrc`, but `gatsby develop` runs ESLint with Gatsby's built-in config (react-app rules) on every bundled file and prints the warnings in the terminal and the browser console (`[HMR] bundle 'develop' has N warnings`). `gatsby build` does not lint. `src/` is currently warning-free; keep it that way.
 
 Deploying under a subpath: set `pathPrefix` in `gatsby-config.js`, then `gatsby clean && gatsby build --prefix-paths`. This is why static assets are always referenced through `withPrefix(...)`.
 
@@ -31,7 +33,7 @@ page (src/pages/index.js)
   └─ <CsoundInstr inst csd csoundwasm tunings osc keyboard plugins>   lib/csoundinstr.js
        └─ <Instrument inst onChange>                                   lib/instrument.js
             └─ <Panel def> / <TabPanel def>  (recursive)               lib/panel.js, lib/tabpanel.js
-                 └─ Fader | Knob | Switch | NumberInput | Toggle | XY | Adsr | custom
+                 └─ Fader | Knob | Switch | NumberInput | Toggle | XYPad | Adsr | custom
 ```
 
 - **`CsoundInstr`** owns the Csound engine and all note input. In `componentDidMount` it dynamically imports the Csound ESM bundle by URL (`import(/* webpackIgnore: true */ url)`), fetches the `.csd`, writes it into Csound's virtual FS, compiles and starts it. Widget changes arrive in `handleUpdate(id, val)` and become `setControlChannel` / `setStringChannel` calls; object values (e.g. from `xy`) are fanned out one channel per key.
