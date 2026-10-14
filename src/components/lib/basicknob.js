@@ -65,10 +65,18 @@ class BasicKnob extends React.Component {
     canvasClassName: null,
   };
 
+  // Canvas size, derived from props on every access (replaces the legacy
+  // componentWillReceiveProps that copied width/height into fields).
+  get w() {
+    return this.props.width || 200;
+  }
+
+  get h() {
+    return this.props.height || this.w;
+  }
+
   constructor(props) {
     super(props);
-    this.w = this.props.width || 200;
-    this.h = this.props.height || this.w;
     this.cursorExt = this.props.cursor === true ? 0.3 : this.props.cursor / 100;
     this.angleArc = this.props.angleArc * Math.PI / 180;
     this.angleOffset = this.props.angleOffset * Math.PI / 180;
@@ -85,15 +93,6 @@ class BasicKnob extends React.Component {
     this.drawCanvas();
     if (!this.props.readOnly) {
       this.canvasRef.addEventListener('touchstart', this.handleTouchStart, { passive: false });
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.width && this.w !== nextProps.width) {
-      this.w = nextProps.width;
-    }
-    if (nextProps.height && this.h !== nextProps.height) {
-      this.h = nextProps.height;
     }
   }
 
