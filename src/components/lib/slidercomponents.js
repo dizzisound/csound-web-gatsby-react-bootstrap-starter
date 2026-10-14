@@ -182,7 +182,7 @@ Track.propTypes = {
 // *******************************************************
 // TICK COMPONENT
 // *******************************************************
-export function Tick({ tick, format }) {
+export function Tick({ tick, format = d => d }) {
   return (
     <div>
       <div
@@ -217,9 +217,5 @@ Tick.propTypes = {
     value: PropTypes.number.isRequired,
     percent: PropTypes.number.isRequired,
   }).isRequired,
-  format: PropTypes.func.isRequired,
-}
-
-Tick.defaultProps = {
-  format: d => d,
+  format: PropTypes.func,
 }

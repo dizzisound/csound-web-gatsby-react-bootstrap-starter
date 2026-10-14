@@ -45,7 +45,7 @@ SliderRail.propTypes = {
 export function Handle({
                          domain: [min, max],
                          handle: { id, value, percent },
-                         disabled,
+                         disabled = false,
                          getHandleProps,
                        }) {
   return (
@@ -99,10 +99,6 @@ Handle.propTypes = {
   disabled: PropTypes.bool,
 }
 
-Handle.defaultProps = {
-  disabled: false,
-}
-
 // *******************************************************
 // KEYBOARD HANDLE COMPONENT
 // Uses a button to allow keyboard events
@@ -110,7 +106,7 @@ Handle.defaultProps = {
 export function KeyboardHandle({
                                  domain: [min, max],
                                  handle: { id, value, percent },
-                                 disabled,
+                                 disabled = false,
                                  getHandleProps,
                                }) {
   return (
@@ -147,14 +143,10 @@ KeyboardHandle.propTypes = {
   disabled: PropTypes.bool,
 }
 
-KeyboardHandle.defaultProps = {
-  disabled: false,
-}
-
 // *******************************************************
 // TRACK COMPONENT
 // *******************************************************
-export function Track({ source, target, getTrackProps, disabled }) {
+export function Track({ source, target, getTrackProps, disabled = false }) {
   return (
     <div
       style={{
@@ -188,14 +180,10 @@ Track.propTypes = {
   disabled: PropTypes.bool,
 }
 
-Track.defaultProps = {
-  disabled: false,
-}
-
 // *******************************************************
 // TICK COMPONENT
 // *******************************************************
-export function Tick({ tick, count, format }) {
+export function Tick({ tick, count, format = d => d }) {
   return (
     <div>
       <div
@@ -232,9 +220,5 @@ Tick.propTypes = {
     percent: PropTypes.number.isRequired,
   }).isRequired,
   count: PropTypes.number.isRequired,
-  format: PropTypes.func.isRequired,
-}
-
-Tick.defaultProps = {
-  format: d => d,
+  format: PropTypes.func,
 }
