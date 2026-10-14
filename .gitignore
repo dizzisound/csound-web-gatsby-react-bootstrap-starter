@@ -72,3 +72,6 @@ yarn-error.log
 
 
 tutorial.md
+
+# Claude Code worktrees
+.claude/worktrees/

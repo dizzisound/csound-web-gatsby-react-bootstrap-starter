@@ -62,7 +62,7 @@ class Instrument extends React.Component {
 
   setDefaultValues() {
     Object.keys(this.components).forEach(key => {
-      if(this.components[key].changeValue && this.components[key].defval)
+      if (this.components[key].changeValue && this.components[key].defval !== undefined)
         this.components[key].changeValue(this.components[key].defval)
     })
   }

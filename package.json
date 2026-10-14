@@ -2,12 +2,12 @@
   "name": "csound-web-gatsby-react-bootstrap-starter",
   "private": true,
   "description": "a gatsby-react-bootstrap-csound instrument",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "author": "docB",
   "dependencies": {
     "bootstrap": "^5.2.3",
-    "canvas": "^2.11.0",
-    "gatsby": "^5.3.3",
+    "canvas": "^3.2.3",
+    "gatsby": "^5.16.1",
     "gatsby-plugin-image": "^3.3.2",
     "gatsby-plugin-manifest": "^5.3.1",
     "gatsby-plugin-offline": "^6.3.1",
@@ -17,34 +17,31 @@
     "gatsby-plugin-sitemap": "^6.3.1",
     "gatsby-source-filesystem": "^5.3.1",
     "gatsby-transformer-sharp": "^5.3.1",
-    "konva": "^8.3.14",
+    "konva": "^10.8.0",
     "osc-js": "^2.4.0",
     "prop-types": "^15.8.1",
-    "react": "^18.0.0",
+    "react": "^18.3.1",
     "react-bootstrap": "^2.7.0",
     "react-compound-slider": "^3.4.0",
-    "react-dom": "^18.0.0",
+    "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
-    "react-icons": "^4.7.1",
-    "react-konva": "^18.2.3",
+    "react-konva": "^18.2.16",
     "react-number-format": "^5.1.2",
     "react-numeric-input": "^2.2.3",
     "react-select": "^5.7.0",
-    "sass": "^1.57.1"
+    "sass": "^1.105.1"
   },
   "devDependencies": {
-    "gh-pages": "^4.0.0",
-    "prettier": "^2.8.1"
+    "gh-pages": "^6.3.0",
+    "prettier": "^3.9.10"
   },
-  "resolutions": {
-    "graphql": "^15.4.0",
-    "graphql-compose": "^7.25.0",
-    "webpack": "^5.24.2"
+  "engines": {
+    "node": ">=20.19.0"
   },
   "keywords": [
     "gatsby"
   ],
-  "license": "Unlicence",
+  "license": "LGPL-3.0-or-later",
   "scripts": {
     "build": "gatsby build",
     "develop": "gatsby develop -H 0.0.0.0 -p 8000",

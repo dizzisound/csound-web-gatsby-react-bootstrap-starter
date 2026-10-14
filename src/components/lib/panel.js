@@ -8,7 +8,6 @@ import NumberInput from "./numberinput"
 import Toggle from "./toggle"
 import Adsr from "./adsr"
 import XY from "./xy"
-import { v4 as uuidv4 } from 'uuid';
 
 class Panel extends React.Component {
 

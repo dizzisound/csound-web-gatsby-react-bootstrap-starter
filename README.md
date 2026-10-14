@@ -4,7 +4,7 @@ This starter ships with a small csound instrument which generates sound with ran
 
 ## Quick start
 1.  **What you need**
-    Node.js 12+
+    Node.js 20.19+
 
 1.  **Install gatsby cli**
     Gatsby is a static site generator for react with server side rendering.
@@ -225,5 +225,5 @@ modify it acordingly.
 It is possible to plug in custom components in this system by providing a generation funtion (see `src/components/lib/panel.js`)
 Examples will be provided soonish.
 
-
-
+## License
+LGPL-3.0-or-later (see `LICENSE` and `COPYING`), except `src/components/lib/`, which keeps its own public-domain license (Unlicense).
