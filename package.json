@@ -27,7 +27,6 @@
     "react-helmet": "^6.1.0",
     "react-konva": "^18.2.16",
     "react-number-format": "^5.1.2",
-    "react-numeric-input": "^2.2.3",
     "react-select": "^5.7.0",
     "sass": "^1.105.1"
   },

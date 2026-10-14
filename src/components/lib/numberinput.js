@@ -1,6 +1,6 @@
 import React from "react"
 import { Row, Col } from "react-bootstrap"
-import NumericInput from "react-numeric-input"
+import Spinner from "./spinner"
 import Label from "./label"
 
 class NumberInput extends React.Component {
@@ -34,10 +34,10 @@ class NumberInput extends React.Component {
           </Col>
         </Row>
         <Row className="g-0 justify-content-center"><Col md="auto">
-          <NumericInput strict={true} size={this.props.def.size} style={{ input: { textAlign: "center" } }}
-                        value={this.state.value}
-                        min={this.props.def.min} max={this.props.def.max} step={this.props.def.step}
-                        onChange={this.onChange}
+          <Spinner size={this.props.def.size}
+                   value={this.state.value}
+                   min={this.props.def.min} max={this.props.def.max} step={this.props.def.step}
+                   onChange={this.onChange}
           />
         </Col>
         </Row>

@@ -4,7 +4,7 @@ import {Stage, Layer, Shape} from "react-konva"
 import Alert from './alert'
 import Toggle from './toggle';
 import HFader from './hfader';
-import NumericInput from "react-numeric-input"
+import Spinner from "./spinner"
 
 const Terpstra = (props) => {
   const size = 30
@@ -441,10 +441,10 @@ const Terpstra = (props) => {
             </Col>
             <Col style={{margin: 'auto', textAlign: 'right'}} xs={"auto"}>Base frequency:</Col>
             <Col style={{margin: 'auto'}} xs="auto">
-              <NumericInput strict={true} size={5} style={{ input: { textAlign: "center" } }}
-                            value={baseFreq}
-                            min={1} max={256} step={0.001}
-                            onChange={onBaseFreqChange}/>
+              <Spinner size={5}
+                       value={baseFreq}
+                       min={1} max={256} step={0.001}
+                       onChange={onBaseFreqChange}/>
 
             </Col>
             <Col style={{margin: 'auto'}} xs="auto">
