@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A Gatsby 5 / React 18 / react-bootstrap starter for building browser-based Csound instruments (Csound compiled to WASM). A page declares an instrument GUI as a plain JS object; the library in `src/components/lib/` renders it and wires every widget to a Csound control channel. The `feature/gatsby5_update` branch is an in-progress migration from an older Gatsby version.
+A Gatsby 5 / React 19 / react-bootstrap starter for building browser-based Csound instruments (Csound compiled to WASM). A page declares an instrument GUI as a plain JS object; the library in `src/components/lib/` renders it and wires every widget to a Csound control channel. The `feature/gatsby5_update` branch is an in-progress migration from an older Gatsby version.
 
 ## Commands
 
@@ -69,6 +69,7 @@ Widgets do not expose refs. Instead each widget, in its constructor, attaches a 
 ## Conventions
 
 - Plain JavaScript, mostly React class components; no TypeScript.
+- React 19: `propTypes` are no longer checked at runtime (kept as documentation only), and `defaultProps` only works on class components — use default parameters in function components. `react-numeric-input` was replaced by `lib/spinner.js` (a `NumericFormat` wrapper) for React 19 compatibility.
 - Prettier config: no semicolons, double quotes, 2-space indent, `es5` trailing commas. Existing files are not uniformly formatted — match the file you are editing rather than reformatting it.
 - `src/components/lib/` is a reusable component library with its own LICENSE/README (vendored from a separate "react-components" project); keep app-specific code in `src/pages/` and `src/components/`.
 - The widget definition options (panel, fader/hfader/knob, spinner, xy, select) are documented in tables in `README.md`; update them when changing a widget's definition schema.

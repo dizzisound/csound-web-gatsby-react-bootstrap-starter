@@ -20,8 +20,8 @@ class TabPanel extends React.Component {
       if (component.type === "panel") {
         if (defaultId === undefined) defaultId = component.id
         components.push(
-          <Tab eventKey={component.id} title={component.label}>
-            <Panel def={component} key={component.id} onChange={this.onChange.bind(this)} />
+          <Tab eventKey={component.id} title={component.label} key={component.id}>
+            <Panel def={component} onChange={this.onChange.bind(this)} />
           </Tab>,
         )
 
