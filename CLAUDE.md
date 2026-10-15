@@ -57,7 +57,7 @@ Widgets do not expose refs. Instead each widget, in its constructor, attaches a 
 ### Note / control inputs (all funnel into `sendNoteEvent` or `Instrument.setValues`)
 
 - **Computer keyboard**: `noteMap` in `csoundinstr.js`, key handlers on the focused root `Row` (velocity/octave set by the footer faders).
-- **WebMIDI**: note on/off, plus CC mapped to any widget whose definition has a matching `midictrl` number (scaled into `min..max`).
+- **WebMIDI** (native Web MIDI API, no library): note on/off (note-on with velocity 0 counts as note-off), plus CC mapped to any widget whose definition has a matching `midictrl` number (scaled into `min..max`). One selected input at a time; `refreshMidiDevices()` rebuilds the device list on the `MIDIAccess` `statechange` event, so hot-plugged devices appear and unplugged ones fall back to another input. Firefox gates Web MIDI behind a site-permission add-on regardless of code.
 - **OSC** (enabled by the `osc` prop, a namespace string): `osc-js` WebSocket client to an osc-js bridge on `localhost:47100`, opened only when the user clicks the "Connect OSC" button (no connection attempt at startup). Addresses: `/<osc>/note`, `/<osc>/notefreq`, `/<osc>/<widgetId>[/<subkey>]`.
 - **On-screen keyboard** (enabled by the `keyboard` prop): `src/pages/keyboard.js` opens in a popup and renders `KeyboardLayout` → `Terpstra` (Konva canvas). It talks to the instrument page over a `BroadcastChannel` whose name must match on both sides (`keyboard="rsw"` in `index.js` ↔ `name="rsw"` in `keyboard.js`).
 

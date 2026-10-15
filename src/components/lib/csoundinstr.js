@@ -134,24 +134,35 @@ class CsoundInstr extends React.Component {
 
   }
 
-  webMidiInit(midi_handle) {
-    let devicesAvailable = false
-    let devs = midi_handle.inputs.values()
-    this.devices = []
-    for (let device = devs.next(); device && !device.done; device = devs.next()) {
-      console.log(device)
-      this.devices.push({value: device.value, label: device.value.name})
-      devicesAvailable = true
+  webMidiInit(midiAccess) {
+    console.log("WebMIDI support enabled")
+    this.midiAccess = midiAccess
+    this.onMidiMessage = this.onMidiEvent.bind(this)
+    // fires when a MIDI device is plugged in or out (hot-plugging)
+    midiAccess.onstatechange = () => this.refreshMidiDevices()
+    this.refreshMidiDevices()
+  }
+
+  // Rebuild the input list; keep the selected device if it is still there,
+  // otherwise listen to the first available one.
+  refreshMidiDevices() {
+    const inputs = [...this.midiAccess.inputs.values()].filter(input => input.state !== "disconnected")
+    this.devices = inputs.map(input => ({value: input, label: input.name}))
+    const previous = this.currentInput
+    const kept = previous && this.devices.find(device => device.value.id === previous.id)
+    const current = kept || this.devices[0]
+    if (previous && (!current || previous !== current.value)) previous.onmidimessage = null
+    if (!current) {
+      this.currentInput = undefined
+      this.setState({
+        midi: false, currentDevice: undefined,
+        midierr: {text: "No MIDI devices", detail: "WebMIDI works, but no MIDI input device was found"},
+      })
+      return
     }
-    if (!devicesAvailable) {
-      console.log("No midi devices available")
-      this.setState({midierr: {text: "No MIDI devices", detail: "WebMIDI works, but no MIDI input device was found"}})
-    } else {
-      console.log("WebMIDI support enabled")
-      this.setState({midi: true})
-      this.setState({currentDevice: this.devices[0]})
-      this.devices[0].value.onmidimessage = this.onMidiEvent.bind(this)
-    }
+    this.currentInput = current.value
+    current.value.onmidimessage = this.onMidiMessage
+    this.setState({midi: true, currentDevice: current, midierr: undefined})
   }
 
   webMidiErr(err) {
@@ -208,6 +219,8 @@ class CsoundInstr extends React.Component {
 
   componentWillUnmount() {
     this.disconnectOsc()
+    if (this.midiAccess) this.midiAccess.onstatechange = null
+    if (this.currentInput) this.currentInput.onmidimessage = null
     if (this.csound) {
       this.csound.stop()
       this.csound.destroy()
@@ -257,9 +270,8 @@ class CsoundInstr extends React.Component {
     if (chfilter && chn !== chfilter) return;
     switch (event.data[0] & 0xf0) {
       case 0x90:
-        if (event.data[2] !== 0) {
-          this.sendNoteEvent(event.data[1], event.data[2], 1)
-        }
+        // many keyboards send note-on with velocity 0 instead of note-off
+        this.sendNoteEvent(event.data[1], event.data[2], event.data[2] !== 0 ? 1 : 0)
         break
       case 0x80:
         this.sendNoteEvent(event.data[1], event.data[2], 0)
@@ -350,10 +362,10 @@ class CsoundInstr extends React.Component {
 
   handleMidiSelect = (device) => {
     console.log("selected: ", device.value.name)
-    const prevDevice = this.state.currentDevice
-    prevDevice.value.onmidimessage = undefined
+    if (this.currentInput && this.currentInput !== device.value) this.currentInput.onmidimessage = null
+    this.currentInput = device.value
+    device.value.onmidimessage = this.onMidiMessage
     this.setState({currentDevice: device})
-    device.value.onmidimessage = this.onMidiEvent.bind(this)
   }
 
   noteOn = (note) => {
