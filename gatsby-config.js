@@ -19,7 +19,20 @@ module.exports = {
         path: `${__dirname}/src/images`,
       },
     },
-    `gatsby-plugin-sass`,
+    {
+      resolve: `gatsby-plugin-sass`,
+      options: {
+        sassOptions: {
+          includePaths: [`node_modules`],
+          // Bootstrap 5's SCSS uses @import and global functions deprecated in
+          // Dart Sass; hide warnings from dependencies until Bootstrap 6.
+          // Deprecations in this project's own .scss files still show.
+          quietDeps: true,
+          // sass-loader 10 (pinned by gatsby-plugin-sass) uses the legacy JS API
+          silenceDeprecations: [`legacy-js-api`],
+        },
+      },
+    },
     "gatsby-plugin-image", 
     "gatsby-plugin-sitemap",
     {

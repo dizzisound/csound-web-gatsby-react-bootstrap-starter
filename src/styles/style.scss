@@ -1,4 +1,6 @@
-@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+// Loaded through the node_modules load path (gatsby-config.js), so Sass treats
+// Bootstrap as a dependency and quietDeps hides its deprecation warnings.
+@import "bootstrap/scss/bootstrap";
 @import "variables";
 @import "layout";
 @import "cs";
