@@ -66,7 +66,6 @@ $mynewcolor: $cs-blue;
 .insthead { align-items: center; row-gap: $cs-space-2; margin-bottom: $cs-space-3; }
 .insthead > .col { flex: 0 1 auto; width: auto; }
 .insthead > .col:last-child { margin-left: auto; min-width: 10rem; }
-.midierr { max-width: 24rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 // panels and their contents
 .inst { gap: $cs-space-3; }
@@ -113,6 +112,7 @@ $mynewcolor: $cs-blue;
 .patswitch {
     display: inline-flex; align-items: center; gap: $cs-space-2;
     background: none; border: 0; padding: 0; color: inherit; font: inherit; cursor: pointer;
+    text-transform: inherit; letter-spacing: inherit;
 }
 .patswitch-track {
     position: relative; display: inline-block; width: 28px; height: 16px; border-radius: 8px;
@@ -146,3 +146,46 @@ $mynewcolor: $cs-blue;
 .tunselect .cs-select__option { color: $cs-text; background-color: transparent; }
 .tunselect .cs-select__option--is-focused { background-color: $cs-surface-3; }
 .tunselect .cs-select__option--is-selected { background-color: $cs-blue; color: #fff; }
+
+// ---- text hierarchy ----
+.site-brand {
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: $cs-text-muted;
+}
+.site-brand:hover { color: $cs-accent; }
+
+// panel titles: small capitals, muted; nested sub-panel titles a bit quieter
+.patlabel { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: $cs-text-muted; }
+.patbody .patlabel { font-size: 0.75rem; letter-spacing: 0.05em; }
+.patswitch.on .patswitch-label { color: $cs-text; }
+
+// widget labels and values
+.widget-label { font-size: 0.85rem; font-weight: 500; }
+.valuebox, .spinner input, .xyvalue {
+    font-size: 0.9rem; color: #fff; font-variant-numeric: tabular-nums;
+}
+.xyvalue { text-align: left; }
+.unit { font-size: 0.75rem; color: $cs-text-muted; }
+
+// footer
+.instfooter .footer-title {
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: $cs-text-muted;
+}
+.instfooter .footer-label { font-size: 0.85rem; color: $cs-text; }
+
+// buttons with an icon
+.btn-icon { vertical-align: -2px; margin-right: 2px; }
+
+// status badges
+.status-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 2px 10px; border-radius: 999px; font-size: 0.8rem; line-height: 1.5;
+    background-color: $cs-surface-2; border: 1px solid $cs-border; color: $cs-text; white-space: nowrap;
+}
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background-color: $cs-text-muted; }
+.status-badge.ok .status-dot { background-color: $cs-success; box-shadow: 0 0 6px rgba(61, 220, 132, 0.6); }
+.status-badge.warn .status-dot { background-color: $cs-warning; }
+.status-badge.err { border-color: $cs-danger; }
+.status-badge.err .status-dot { background-color: $cs-danger; }
+.status-badge.muted { color: $cs-text-muted; }
+.status-badge[title] { cursor: help; }

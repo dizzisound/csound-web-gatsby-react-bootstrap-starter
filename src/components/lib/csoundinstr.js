@@ -4,6 +4,7 @@ import Instrument from "./instrument.js"
 import HFader from "./hfader"
 import Select from "react-select"
 import OSC from 'osc-js'
+import {KeyboardIcon} from './icons'
 import {withPrefix} from "gatsby";
 
 const noteMap = {
@@ -43,6 +44,13 @@ const noteMap = {
   Equal: 90,
   BracketRight: 91,
 }
+
+// Small status pill with a coloured dot; `title` holds the details.
+const StatusBadge = ({level, text, title}) => (
+  <span className={"status-badge " + level} title={title}>
+    <span className="status-dot" />{text}
+  </span>
+)
 
 class CsoundInstr extends React.Component {
   constructor(props) {
@@ -118,7 +126,7 @@ class CsoundInstr extends React.Component {
           this.webMidiErr.bind(this))
       } else {
         console.log("No WebMIDI support")
-        this.setState({midierr: "No WebMIDI Support"})
+        this.setState({midierr: {text: "No WebMIDI", detail: "This browser doesn't support WebMIDI"}})
       }
     }
     this.instrument.current.setDefaultValues();
@@ -137,7 +145,7 @@ class CsoundInstr extends React.Component {
     }
     if (!devicesAvailable) {
       console.log("No midi devices available")
-      this.setState({midierr: "No devices found"})
+      this.setState({midierr: {text: "No MIDI devices", detail: "WebMIDI works, but no MIDI input device was found"}})
     } else {
       console.log("WebMIDI support enabled")
       this.setState({midi: true})
@@ -151,7 +159,7 @@ class CsoundInstr extends React.Component {
     // Show the browser's reason, e.g. Firefox's "WebMIDI requires a site
     // permission add-on to activate" or a denied permission prompt.
     const reason = (err && (err.message || err.name)) || "unknown error"
-    this.setState({midierr: "WebMIDI unavailable: " + reason});
+    this.setState({midierr: {text: "MIDI unavailable", detail: reason}});
   }
 
   // OSC is opt-in: the WebSocket to the osc-js bridge on localhost:47100 is
@@ -388,6 +396,13 @@ class CsoundInstr extends React.Component {
     }
   }
 
+  csoundBadge() {
+    const status = this.state.csoundLoaded
+    if (status === "running") return <StatusBadge level="ok" text="Csound" title="Csound is running" />
+    if (status === "loading") return <StatusBadge level="warn" text="Csound loading…" />
+    return <StatusBadge level="err" text="Csound error" title={"Csound: " + status} />
+  }
+
   render() {
     const {options, devices, midichannels} = this
     return (
@@ -395,14 +410,16 @@ class CsoundInstr extends React.Component {
            ref={ref => this.root.current = ref}>
         <Col>
           <Row className="insthead">
-            <Col className={this.state.csndstatus}>Csound {this.state.csoundLoaded}</Col>
-            <Col>
-              {!this.state.started ?
-                <Button size="sm" variant="warning" onClick={this.handleStart.bind(this)}
-                        title="The browser paused audio until you interact with the page">&#9654; Start audio</Button> :
-                <div>audio enabled</div>
-              }
-            </Col>
+            <Col>{this.csoundBadge()}</Col>
+            {this.state.csoundLoaded === "running" ? (
+              <Col>
+                {!this.state.started ?
+                  <Button size="sm" variant="warning" onClick={this.handleStart.bind(this)}
+                          title="The browser paused audio until you interact with the page">&#9654; Start audio</Button> :
+                  <StatusBadge level="ok" text="Audio" title="Audio is running" />
+                }
+              </Col>
+            ) : ""}
             {this.state.midi ? (
               <>
                 <Col>
@@ -415,7 +432,8 @@ class CsoundInstr extends React.Component {
                           isClearable={false} isSearchable={false} className="tunselect" classNamePrefix="cs-select"/>
                 </Col>
               </>
-            ) : <Col className="midierr" title={this.state.midierr}>{this.state.midierr}</Col>
+            ) : <Col>{this.state.midierr &&
+                  <StatusBadge level="muted" text={this.state.midierr.text} title={this.state.midierr.detail} />}</Col>
             }
             {this.props.osc ? (
               <Col>
@@ -442,16 +460,17 @@ class CsoundInstr extends React.Component {
                         ref={ref => this.instrument.current = ref}/>
           </Col></Row>
           <Row className="g-0 instfooter">
-            <Col className="footer-title" md='auto'>Computer keyboard settings:</Col>
-            <Col className="footer-label">Vel:</Col>
+            <Col className="footer-title" md='auto'>Computer keyboard</Col>
+            <Col className="footer-label">Velocity</Col>
             <Col className="footer-fader"><HFader onChange={this.onVelChange.bind(this)} defval={100} min={0} max={127}
-                         vals={[0, 20, 40, 60, 80, 100, 120]} step={1}/></Col>
-            <Col className="footer-label">Octave:</Col>
+                         vals={[0, 40, 80, 120]} step={1}/></Col>
+            <Col className="footer-label">Octave</Col>
             <Col className="footer-fader"><HFader onChange={this.onOctaveChange.bind(this)} min={0} max={9} defval={5}
                          vals={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]} step={1}/></Col>
             {this.props.keyboard ? (
               <Col className="footer-action" md="auto">
-                <Button onClick={this.onOpenKeyboard.bind(this)} variant="secondary">Open screen keyboard</Button>
+                <Button size="sm" onClick={this.onOpenKeyboard.bind(this)} variant="secondary"
+                        title="Open the on-screen keyboard in a new window"><KeyboardIcon /> Screen keyboard</Button>
               </Col>
             ) : ""
             }

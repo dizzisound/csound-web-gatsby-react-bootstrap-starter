@@ -10,7 +10,7 @@ const REPEAT_INTERVAL = 50
 // [min, max] (a missing bound means unbounded). Replaces react-numeric-input
 // (unmaintained, legacy lifecycles). Buttons and arrow keys commit at once;
 // typed text is committed on Enter or blur, rounded and clamped.
-export default function Spinner({ value, min, max, step = 1, size, onChange }) {
+export default function Spinner({ value, min, max, step = 1, size, unit, onChange }) {
   const [shown, setShown] = useState(value)
   // Follow external value changes (MIDI, OSC, presets) during render rather
   // than in an effect; keep typed text such as "4." that already equals it.
@@ -110,7 +110,8 @@ export default function Spinner({ value, min, max, step = 1, size, onChange }) {
 
   return (
     <span className="spinner">
-      <NumericFormat value={shown} size={size} decimalScale={digits} allowNegative={lo < 0}
+      <NumericFormat value={shown} decimalScale={digits} allowNegative={lo < 0}
+                     suffix={unit ? " " + unit : undefined} size={size && unit ? size + unit.length + 1 : size}
                      className={pending ? "spinner-pending" : undefined}
                      title={pending ? "Press Enter to apply" : undefined}
                      onValueChange={onValueChange} onBlur={commitTyped} onKeyDown={onKeyDown} />

@@ -1,12 +1,11 @@
 import { Col } from "react-bootstrap";
+import { Link } from "gatsby";
+
+// Replace the site title with your logo if you like.
 const Header = ({ siteTitle }) => (
-  <>
   <Col>
-        <a href="/" className="link-no-style">
-          put your logo here
-        </a>
+    <Link to="/" className="site-brand">{siteTitle}</Link>
   </Col>
-  </>
 )
 
 export default Header

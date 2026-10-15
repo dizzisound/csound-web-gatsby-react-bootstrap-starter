@@ -13,12 +13,12 @@ const Label = (props) => {
         <OverlayTrigger placement="top"
                         delay={{show: 250, hide: 200}}
                         overlay={renderTooltip(props.tooltip)}>
-          <Col className="dbyellow" md="auto">
+          <Col className="dbyellow widget-label" md="auto">
             {props.label}
           </Col>
         </OverlayTrigger>
       ) : (
-        <Col className="dbyellow" md="auto">
+        <Col className="dbyellow widget-label" md="auto">
           {props.label}
         </Col>
       )

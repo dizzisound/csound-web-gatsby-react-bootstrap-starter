@@ -162,6 +162,7 @@ The faders and knobs support editing values and stepping via the keyboard up and
 | defval | number | the default value | yes |
 | height | number | the height of the fader/knob | yes |
 | width | number | the witdh of the knob/hfader | yes |
+| unit | string | a unit shown after the value, e.g. `"s"` or `"Hz"` (fader and knob) | no |
 
 #### spinner
 a number input with up and down arrows.
@@ -176,6 +177,7 @@ The arrows (hold to repeat) and the keyboard up/down keys change the value immed
 | step | number | the precision of the fader/knob - use 1 for integer and e.g. 0.01 for floats | yes |
 | defval | number | the default value | yes |
 | size | number | the number of characters | yes |
+| unit | string | a unit shown after the value, e.g. `"Hz"` | no |
  
 #### xy
 | parameter | type | description | mandatory |

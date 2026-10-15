@@ -3,10 +3,10 @@ export default class Components {
     let h = (height === undefined ? 200 : height)
     return {
       type: "panel", label: "adsr", id: id, on: true, widgets: [
-        { id: id + "_a", type: "fader", label: "A", min: 0, max: 3, step: 0.01, defval: 0.01, height: h },
-        { id: id + "_d", type: "fader", label: "D", min: 0, max: 3, step: 0.01, defval: 0, height: h },
+        { id: id + "_a", type: "fader", label: "A", unit: "s", min: 0, max: 3, step: 0.01, defval: 0.01, height: h },
+        { id: id + "_d", type: "fader", label: "D", unit: "s", min: 0, max: 3, step: 0.01, defval: 0, height: h },
         { id: id + "_s", type: "fader", label: "S", min: 0, max: 1, step: 0.01, defval: 1, height: h },
-        { id: id + "_r", type: "fader", label: "R", min: 0, max: 1, step: 0.01, defval: 0.1, height: h },
+        { id: id + "_r", type: "fader", label: "R", unit: "s", min: 0, max: 1, step: 0.01, defval: 0.1, height: h },
       ],
     }
   }
@@ -20,6 +20,7 @@ export default class Components {
             {
               id: id + "_rte",
               type: "knob",
+              unit: "Hz",
               label: "rte",
               min: 0.01,
               max: 10,

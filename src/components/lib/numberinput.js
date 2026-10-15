@@ -41,7 +41,7 @@ class NumberInput extends React.Component {
           </Col>
         </Row>
         <Row className="g-0 justify-content-center"><Col md="auto">
-          <Spinner size={this.props.def.size}
+          <Spinner size={this.props.def.size} unit={this.props.def.unit}
                    value={this.state.value}
                    min={this.props.def.min} max={this.props.def.max} step={this.props.def.step}
                    onChange={this.onChange}

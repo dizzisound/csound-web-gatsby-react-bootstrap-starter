@@ -2,6 +2,7 @@ import React from "react"
 import { Row, Col, Button } from "react-bootstrap"
 import Panel from "./panel"
 import TabPanel from "./tabpanel"
+import { SaveIcon, LoadIcon } from "./icons"
 
 class Instrument extends React.Component {
 
@@ -123,7 +124,8 @@ class Instrument extends React.Component {
         </Row>
         <Row className="g-0 insttools">
           <Col md="auto">
-            <Button size="sm" variant="secondary" onClick={this.download.bind(this)}>Save</Button>
+            <Button size="sm" variant="secondary" onClick={this.download.bind(this)}
+                    title="Save the current settings as a JSON preset"><SaveIcon /> Save preset</Button>
           </Col>
           <Col md="auto">
             <input type="file"
@@ -132,7 +134,8 @@ class Instrument extends React.Component {
                    accept=".json,application/json"
                    onChange={evt => this.upload(evt)}
                    ref={e => this.dofileUpload = e} />
-            <Button size="sm" variant="secondary" onClick={this.open.bind(this)}>Load</Button>
+            <Button size="sm" variant="secondary" onClick={this.open.bind(this)}
+                    title="Load a JSON preset"><LoadIcon /> Load preset</Button>
           </Col>
         </Row>
       </>
