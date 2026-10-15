@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react"
+import {useRef, useState} from "react"
 import {Row, Col, Button} from 'react-bootstrap'
 import {Stage, Layer, Shape} from "react-konva"
 import Alert from './alert'

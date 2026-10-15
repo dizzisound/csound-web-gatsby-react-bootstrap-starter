@@ -1,4 +1,3 @@
-import React from 'react';
 import { Col, OverlayTrigger, Tooltip } from "react-bootstrap"
 
 const renderTooltip = (tooltip) => (

@@ -1,4 +1,3 @@
-import React from "react"
 import { useStaticQuery, graphql } from "gatsby"
 
 // Document head for a page, rendered from the page's `export const Head`

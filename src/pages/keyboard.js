@@ -1,4 +1,3 @@
-import React from "react";
 import KeyboardLayout from "../components/lib/keyboardlayout";
 import Seo from "../components/seo";
 function Keyboard() {

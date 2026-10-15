@@ -1,4 +1,3 @@
-import React from 'react'
 import {Container, Row, Col, Tabs, Tab} from "react-bootstrap";
 import Terpstra from "./terpstra";
 
