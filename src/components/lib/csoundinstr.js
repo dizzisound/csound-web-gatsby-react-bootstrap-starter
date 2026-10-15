@@ -56,7 +56,7 @@ class CsoundInstr extends React.Component {
       velocity: 100,
       octave: 5,
       currentTuning: t,
-      oscmsg: 'No OSC'
+      osc: 'off', // off | connecting | connected | failed
     }
     this.inst = props.inst
     this.instrument = React.createRef()
@@ -121,22 +121,6 @@ class CsoundInstr extends React.Component {
         this.setState({midierr: "No WebMIDI Support"})
       }
     }
-    if (this.props.osc) {
-      this.osc = new OSC();
-      this.osc.open({
-        host: "localhost",
-        port: 47100
-      });
-      this.osc.on('error', () => this.setState({oscmsg: 'No OSC'}));
-      this.osc.on('open', () => {
-        this.setState({oscmsg: 'OSC Connected'});
-      });
-
-      this.osc.on('close', () => {
-        this.setState({oscmsg: 'No OSC'})
-      });
-      this.osc.on('*', this.onOSC.bind(this));
-    }
     this.instrument.current.setDefaultValues();
     this.root.current.focus();
 
@@ -164,10 +148,58 @@ class CsoundInstr extends React.Component {
 
   webMidiErr(err) {
     console.log(err);
-    this.setState({midierr: "Error in WebMIDI"});
+    // Show the browser's reason, e.g. Firefox's "WebMIDI requires a site
+    // permission add-on to activate" or a denied permission prompt.
+    const reason = (err && (err.message || err.name)) || "unknown error"
+    this.setState({midierr: "WebMIDI unavailable: " + reason});
+  }
+
+  // OSC is opt-in: the WebSocket to the osc-js bridge on localhost:47100 is
+  // opened only when the user asks for it, so pages without a bridge don't
+  // log connection errors at startup.
+  connectOsc() {
+    if (!this.osc) {
+      this.osc = new OSC();
+      this.osc.on('open', () => this.setState({osc: 'connected'}));
+      this.osc.on('close', () => {
+        // a late close from a previous socket: the current one is still alive
+        const status = this.osc.status();
+        if (status === OSC.STATUS.IS_CONNECTING || status === OSC.STATUS.IS_OPEN) return;
+        if (this.oscClosing) {
+          // our own disconnect; the state is already "off"
+          this.oscClosing = false;
+          return;
+        }
+        // a close we didn't ask for means the bridge is missing or went away
+        this.setState({osc: 'failed'});
+      });
+      this.osc.on('error', () => {});
+      this.osc.on('*', this.onOSC.bind(this));
+    }
+    this.oscClosing = false;
+    this.setState({osc: 'connecting'});
+    this.osc.open({
+      host: "localhost",
+      port: 47100
+    });
+  }
+
+  disconnectOsc() {
+    if (this.osc) {
+      this.oscClosing = true;
+      this.osc.close();
+      // show "off" right away, so a quick second click reconnects
+      this.setState({osc: 'off'});
+    }
+  }
+
+  onOscButton() {
+    if (this.state.osc === 'connected') this.disconnectOsc();
+    else if (this.state.osc !== 'connecting') this.connectOsc();
   }
 
   componentWillUnmount() {
+    this.disconnectOsc()
     if (this.csound) {
       this.csound.stop()
       this.csound.destroy()
@@ -382,9 +414,23 @@ class CsoundInstr extends React.Component {
                           isClearable={false} isSearchable={false} className="tunselect"/>
                 </Col>
               </>
-            ) : <Col>{this.state.midierr}</Col>
+            ) : <Col className="midierr" title={this.state.midierr}>{this.state.midierr}</Col>
             }
-            {this.props.osc ? <Col>{this.state.oscmsg}</Col> : ""}
+            {this.props.osc ? (
+              <Col>
+                <Button size="sm" variant={this.state.osc === 'connected' ? "primary" : "secondary"}
+                        disabled={this.state.osc === 'connecting'}
+                        title="OSC via the osc-js bridge on ws://localhost:47100"
+                        onClick={this.onOscButton.bind(this)}>
+                  {{
+                    off: "Connect OSC",
+                    connecting: "Connecting OSC…",
+                    connected: "OSC connected",
+                    failed: "No OSC bridge - retry",
+                  }[this.state.osc]}
+                </Button>
+              </Col>
+            ) : ""}
             <Col>
               <Select onChange={this.handleSelect} options={options} value={this.state.currentTuning}
                       isClearable={false} isSearchable={false} className="tunselect"/>
