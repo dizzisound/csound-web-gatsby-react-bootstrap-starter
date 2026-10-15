@@ -1,12 +1,33 @@
 @use "sass:color";
 
-.selectbtngroup { flex-wrap: wrap; color: #fcde3f; }
-.dbyellow { color: #fcde3f }
-.dbblue { color: #fcde3f }
-.dbgreen { color: #00ff00 }
-.dbred { color: #cf2243 }
+:root {
+    // palette as CSS variables, for canvas widgets and inline styles
+    --cs-bg: #{$cs-bg};
+    --cs-surface: #{$cs-surface};
+    --cs-surface-2: #{$cs-surface-2};
+    --cs-surface-3: #{$cs-surface-3};
+    --cs-border: #{$cs-border};
+    --cs-text: #{$cs-text};
+    --cs-text-muted: #{$cs-text-muted};
+    --cs-accent: #{$cs-accent};
+    --cs-blue: #{$cs-blue};
+    --cs-success: #{$cs-success};
+    --cs-warning: #{$cs-warning};
+    --cs-danger: #{$cs-danger};
+}
 
-$mynewcolor:#3f5afc;
+.selectbtngroup { flex-wrap: wrap; color: $cs-accent; }
+.dbyellow { color: $cs-accent }
+.dbblue { color: $cs-accent }
+.dbgreen { color: $cs-success }
+.dbred { color: $cs-danger }
+
+// keyboard focus of the instrument (computer-keyboard notes): a subtle frame
+// instead of the browser's bright default outline
+.instroot { border-radius: $cs-radius; }
+.instroot:focus { outline: 1px solid color.change($cs-accent, $alpha: 0.35); outline-offset: 2px; }
+
+$mynewcolor: $cs-blue;
 
 .btn-primary {
     @include button-variant(
@@ -18,16 +39,16 @@ $mynewcolor:#3f5afc;
         color.adjust($mynewcolor, $lightness: -30%)
     );
 }
-.patcol { margin-top: 5px; margin-right: 5px; background-color: #253040; border-radius: 3px; }
+.patcol { margin-top: 5px; margin-right: 5px; background-color: $cs-surface; border-radius: 3px; }
 .patcol:last-child { margin-right: 0px }
-.patlabel { text-align: center; background-color: #304050;}
-.instfooter { margin-top: 5px; background-color: #304050; border-radius: 3px; }
-.tunselect { background-color: #304050; border-radius: 3px; color: black; z-index:1000}
+.patlabel { text-align: center; background-color: $cs-surface-2;}
+.instfooter { margin-top: 5px; background-color: $cs-surface-2; border-radius: 3px; }
+.tunselect { background-color: $cs-surface-2; border-radius: 3px; color: black; z-index:1000}
 .tooltip > .tooltip-inner { background-color: rgba(50,50,50,127);text-overflow: ellipsis;}
 .tooltip > .tooltip-arrow { background-color: #333;}
 .alert > .modal-content { background-color: rgba(50,50,50,127);}
 .spinner { display: inline-flex; align-items: stretch; }
 .spinner input { text-align: center; }
-.spinner input.spinner-pending { font-style: italic; color: #cf2243; }
+.spinner input.spinner-pending { font-style: italic; color: $cs-danger; }
 .spinner-buttons { display: flex; flex-direction: column; }
-.spinner-buttons button { flex: 1; padding: 0 4px; font-size: 8px; line-height: 1; border: 1px solid #555; background-color: #304050; color: white; }
+.spinner-buttons button { flex: 1; padding: 0 4px; font-size: 8px; line-height: 1; border: 1px solid $cs-border; background-color: $cs-surface-2; color: $cs-text; }

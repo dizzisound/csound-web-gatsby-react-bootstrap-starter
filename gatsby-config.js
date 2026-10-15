@@ -30,7 +30,25 @@ module.exports = {
           quietDeps: true,
           // sass-loader 10 (pinned by gatsby-plugin-sass) uses the legacy JS API
           silenceDeprecations: [`legacy-js-api`],
+          // no @charset rule or BOM in Sass's output (see postCssPlugins below)
+          charset: false,
         },
+        // Keep the CSS pure ASCII. Bootstrap's blockquote rule contains "—" and a
+        // non-breaking space; with non-ASCII output Sass prepends a BOM, and
+        // Gatsby inlines the CSS into a <style> tag in every page, where the BOM
+        // breaks the first rule (Bootstrap's :root variables: fonts, colours).
+        // Re-escape such characters (e.g. "\2014 ").
+        postCssPlugins: [
+          {
+            postcssPlugin: `escape-non-ascii`,
+            Declaration(decl) {
+              decl.value = decl.value.replace(
+                /[^\x00-\x7f]/g,
+                c => `\\${c.codePointAt(0).toString(16)} `
+              )
+            },
+          },
+        ],
       },
     },
     "gatsby-plugin-image", 

@@ -391,7 +391,7 @@ class CsoundInstr extends React.Component {
   render() {
     const {options, devices, midichannels} = this
     return (
-      <Row tabIndex={0} onKeyDown={this.onKeyDown.bind(this)} onKeyUp={this.onKeyUp.bind(this)}
+      <Row className="instroot" tabIndex={0} onKeyDown={this.onKeyDown.bind(this)} onKeyUp={this.onKeyUp.bind(this)}
            ref={ref => this.root.current = ref}>
         <Col>
           <Row style={{marginBottom: 5}}>

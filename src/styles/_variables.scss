@@ -1,1 +1,46 @@
+// Design tokens: dark navy surfaces with a yellow accent.
+// Loaded before Bootstrap (see style.scss) so Bootstrap's variables follow them.
+
+// palette
+$cs-bg: #0b1018;            // page background
+$cs-surface: #253040;       // panels
+$cs-surface-2: #304050;     // panel title bars, footer, raised controls
+$cs-surface-3: #3b4d63;     // hover / pressed
+$cs-border: #44566e;
+$cs-text: #e8ecf2;
+$cs-text-muted: #9aa8bb;
+$cs-accent: #fcde3f;        // labels, highlights (yellow)
+$cs-blue: #3f5afc;          // primary actions, active states
+$cs-success: #3ddc84;
+$cs-warning: #f5a524;
+$cs-danger: #cf2243;
+
+// shape and spacing scale
+$cs-radius: 6px;
+$cs-space-1: 4px;
+$cs-space-2: 8px;
+$cs-space-3: 12px;
+$cs-space-4: 16px;
+$cs-space-5: 24px;
+
+// Bootstrap overrides
+$body-bg: $cs-bg;
+$body-color: $cs-text;
+$primary: $cs-blue;
+$secondary: $cs-surface-3;
+$success: $cs-success;
+$warning: $cs-warning;
+$danger: $cs-danger;
+$link-color: $cs-accent;
+$link-decoration: none;
+$link-hover-color: #fff0a0;
+$headings-color: $cs-text;
+$border-color: $cs-border;
+$nav-tabs-border-color: $cs-border;
+$nav-tabs-link-active-color: $cs-text;
+$nav-tabs-link-active-bg: $cs-surface;
+$nav-tabs-link-active-border-color: $cs-border $cs-border $cs-surface;
+$nav-tabs-link-hover-border-color: $cs-surface-2 $cs-surface-2 $cs-border;
+
+// footer background used by _layout.scss
 $color-primary: #20232a;

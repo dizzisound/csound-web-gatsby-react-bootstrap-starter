@@ -1,3 +1,6 @@
+// Always show the scrollbar, so the layout doesn't shift between pages.
+html { overflow-y: scroll; }
+
 div.main {
   min-height: 100vh;
   padding-bottom: 60px;
