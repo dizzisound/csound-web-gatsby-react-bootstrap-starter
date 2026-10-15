@@ -4,7 +4,7 @@ This starter ships with a small csound instrument which generates sound with ran
 
 ## Quick start
 1.  **What you need**
-    Node.js 20.19+
+    Node.js 22+ (an `.nvmrc` is included: run `nvm use` in the project folder)
 
 1.  **Install gatsby cli**
     Gatsby is a static site generator for react with server side rendering.

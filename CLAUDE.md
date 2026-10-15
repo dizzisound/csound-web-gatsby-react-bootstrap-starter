@@ -8,7 +8,7 @@ A Gatsby 5 / React 19 / react-bootstrap starter for building browser-based Csoun
 
 ## Commands
 
-Requires Node ≥20.19.0 (`engines` in `package.json`; `sass` and `chokidar` need it). The machine's default `node` may be older — switch with nvm first.
+Requires Node ≥22 (`engines` in `package.json`, `.nvmrc`). Dependencies alone need ≥20.19.0 (`sass`, `chokidar`), but Node 20 is end-of-life, so the floor is the 22 LTS. The machine's default `node` may be older — run `nvm use` first.
 
 ```shell
 npm start            # gatsby develop on 0.0.0.0:8000
