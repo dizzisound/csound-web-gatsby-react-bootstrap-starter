@@ -9,7 +9,6 @@ module.exports = {
     DEV_SSR: false
   },
   plugins: [
-    `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {

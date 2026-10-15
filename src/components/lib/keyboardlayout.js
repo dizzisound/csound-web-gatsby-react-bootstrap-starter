@@ -1,6 +1,5 @@
 import React from 'react'
 import {Container, Row, Col, Tabs, Tab} from "react-bootstrap";
-import '../layout.css'
 import Terpstra from "./terpstra";
 
 const KeyboardLayout = (props) => {

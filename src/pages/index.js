@@ -1,5 +1,6 @@
 import React from "react"
 import Layout from "../components/layout"
+import Seo from "../components/seo"
 import CsoundInstr from "../components/lib/csoundinstr"
 import Components from "../components/lib/components"
 import { Row, Col } from "react-bootstrap"
@@ -146,5 +147,7 @@ const IndexPage = () => {
     </Layout>
   )
 }
+
+export const Head = () => <Seo />
 
 export default IndexPage

@@ -6,3 +6,5 @@
 
 // You can delete this file if you're not using it
 import "./src/styles/style.scss"
+// global base styles (html/body); loaded once, after Bootstrap, for every page
+import "./src/components/layout.css"

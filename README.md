@@ -34,6 +34,7 @@ If all worked well you should see "Csound running".
 ### Highlevel
 You can use this starter without any deeper js/react knowhow. The GUI of a csound instrument can be made by filling out a JS object
 as shown in `src/pages/index.js`.
+The page's `<title>` and meta tags come from its `export const Head = () => <Seo />` (Gatsby Head API, see `src/components/seo.js`); pass `title="…"` for a per-page title.
     
 ```jsx
 import React from 'react'

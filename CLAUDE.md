@@ -64,7 +64,8 @@ Widgets do not expose refs. Instead each widget, in its constructor, attaches a 
 ### Build quirks
 
 - `gatsby-node.js` null-loads `canvas` during the HTML build stages (Konva pulls it in under Node) and sets a `dgram: false` resolve fallback for `osc-js`. `DEV_SSR` is off in `gatsby-config.js`. Library code touches `window`, `navigator`, `BroadcastChannel` — keep such access out of module scope and render paths that run during SSR.
-- Styles: `gatsby-browser.js` imports `src/styles/style.scss`, which pulls in the full Bootstrap SCSS plus `_variables`, `_layout`, `_cs` (the instrument/widget classes such as `patcol`, `patlabel`, `dbgreen`).
+- Styles: `gatsby-browser.js` imports `src/styles/style.scss` (full Bootstrap SCSS plus `_variables`, `_layout`, `_cs`: the instrument/widget classes such as `patcol`, `patlabel`, `dbgreen`) and then `src/components/layout.css` (global html/body base styles). Keep global CSS imported only there: importing it from components makes mini-css-extract-plugin warn about conflicting order between pages.
+- Document head: no react-helmet. Each page exports `Head` (Gatsby Head API) rendering `<Seo title="…" />` from `src/components/seo.js` (title, description from `siteMetadata`, keywords); `<html lang>` is set in `gatsby-ssr.js` (`onRenderBody`). A new page needs its own `export const Head`.
 
 ## Conventions
 
