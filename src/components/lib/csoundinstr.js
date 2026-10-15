@@ -272,8 +272,14 @@ class CsoundInstr extends React.Component {
     }
   }
 
+  // Keys typed into a text field (spinner, fader value box) must not play notes.
+  isTyping(event) {
+    const t = event.target
+    return t.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(t.tagName)
+  }
+
   onKeyDown(event) {
-    if (event.repeat) return
+    if (event.repeat || this.isTyping(event)) return
     const note = noteMap[event.nativeEvent.code]
     if (note) {
       this.sendNoteEvent(note - 60 + this.state.octave * 12, this.state.velocity, 1)
@@ -281,7 +287,7 @@ class CsoundInstr extends React.Component {
   }
 
   onKeyUp(event) {
-    if (event.repeat) return
+    if (event.repeat || this.isTyping(event)) return
     const note = noteMap[event.nativeEvent.code]
     if (note) {
       this.sendNoteEvent(note - 60 + this.state.octave * 12, this.state.velocity, 0)
