@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A Gatsby 5 / React 19 / react-bootstrap starter for building browser-based Csound instruments (Csound compiled to WASM). A page declares an instrument GUI as a plain JS object; the library in `src/components/lib/` renders it and wires every widget to a Csound control channel. The `feature/gatsby5_update` branch is an in-progress migration from an older Gatsby version.
+A Gatsby 5 / React 19 / react-bootstrap starter for building browser-based Csound instruments (Csound compiled to WASM). A page declares an instrument GUI as a plain JS object; the library in `src/components/lib/` renders it and wires every widget to a Csound control channel. `feature/gatsby5_update` holds the migration from an older Gatsby to Gatsby 5; `feature/react19_update` builds the React 19 upgrade on top of it.
 
 ## Commands
 

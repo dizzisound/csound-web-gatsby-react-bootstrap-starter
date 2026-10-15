@@ -26,4 +26,12 @@ export default class Util {
     static randomIntM(max) {
        return Math.floor(Math.random() * max); 
     }
+
+    // Number of decimals implied by a step, e.g. 1 -> 0, 0.25 -> 2, 1e-7 -> 7.
+    static decimalsOf(step) {
+      const [mantissa, exp] = String(step).toLowerCase().split("e");
+      const dot = mantissa.indexOf(".");
+      const decimals = (dot < 0 ? 0 : mantissa.length - dot - 1) - Number(exp || 0);
+      return Math.max(0, decimals);
+    }
 }

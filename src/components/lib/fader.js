@@ -2,6 +2,7 @@ import React from "react"
 import { Slider, Rail, Handles, Tracks } from "react-compound-slider"
 import { KeyboardHandle, SliderRail, Track } from "./slidercomponents.js"
 import Label from './label'
+import Util from "./util"
 import { Row, Col } from "react-bootstrap"
 //import NumberFormat from "react-number-format"
 import * as ReactNumberFormat from "react-number-format";
@@ -29,10 +30,7 @@ class Fader extends React.Component {
       border: 0,
       touchAction: "none",
     }
-    if (this.props.def.step >= 1) this.decimalScale = 0
-    else if (this.props.def.step >= 0.1) this.decimalScale = 1
-    else if (this.props.def.step >= 0.01) this.decimalScale = 2
-    else if (this.props.def.step >= 0.001) this.decimalScale = 3
+    this.decimalScale = Util.decimalsOf(this.props.def.step)
     if (this.props.def.log === true) {
       this.domain = [0, 1]
       this.factor = Math.log(this.props.def.max / this.props.def.min)

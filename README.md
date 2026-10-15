@@ -164,6 +164,7 @@ The faders and knobs support editing values and stepping via the keyboard up and
 
 #### spinner
 a number input with up and down arrows.
+The arrows (hold to repeat) and the keyboard up/down keys change the value immediately; a typed value is sent when you press Enter or leave the field, rounded to `step` and clamped to `min`/`max`.
 | parameter | type | description | mandatory |
 |------|------|-----------------------------|-------------|
 | type | string | must be 'spinner' | yes | 
