@@ -28,5 +28,6 @@ $mynewcolor:#3f5afc;
 .alert > .modal-content { background-color: rgba(50,50,50,127);}
 .spinner { display: inline-flex; align-items: stretch; }
 .spinner input { text-align: center; }
+.spinner input.spinner-pending { font-style: italic; color: #cf2243; }
 .spinner-buttons { display: flex; flex-direction: column; }
 .spinner-buttons button { flex: 1; padding: 0 4px; font-size: 8px; line-height: 1; border: 1px solid #555; background-color: #304050; color: white; }

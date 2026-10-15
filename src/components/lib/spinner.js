@@ -83,6 +83,9 @@ export default function Spinner({ value, min, max, step = 1, size, onChange }) {
     setShown(text)
   }
 
+  // Typed text that hasn't been sent yet (Enter or blur commits it).
+  const pending = parseFloat(shown) !== value && String(shown) !== String(value ?? "")
+
   const onKeyDown = e => {
     if (e.key === "ArrowUp") {
       e.preventDefault()
@@ -108,6 +111,8 @@ export default function Spinner({ value, min, max, step = 1, size, onChange }) {
   return (
     <span className="spinner">
       <NumericFormat value={shown} size={size} decimalScale={digits} allowNegative={lo < 0}
+                     className={pending ? "spinner-pending" : undefined}
+                     title={pending ? "Press Enter to apply" : undefined}
                      onValueChange={onValueChange} onBlur={commitTyped} onKeyDown={onKeyDown} />
       <span className="spinner-buttons">
         <button {...buttonProps(1)} aria-label="increment">&#9650;</button>
