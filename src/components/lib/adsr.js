@@ -119,7 +119,7 @@ class Adsr extends React.Component {
             }
           </Col>
         </Row>
-        <Row className="g-0" style={{ flexWrap: "nowrap" }}>
+        <Row className="g-0 patbody" style={{ flexWrap: "nowrap" }}>
           <Knob def={this.components[this.ida]} key={this.components[this.ida].id}
                 onChange={this.onChange.bind(this)} />
           <Knob def={this.components[this.idd]} key={this.components[this.idd].id}

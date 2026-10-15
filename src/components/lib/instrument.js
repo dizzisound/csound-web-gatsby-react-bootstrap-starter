@@ -121,7 +121,7 @@ class Instrument extends React.Component {
         <Row className="g-0 inst">
           {components}
         </Row>
-        <Row>
+        <Row className="g-0 insttools">
           <Col md="auto">
             <Button size="sm" variant="secondary" onClick={this.download.bind(this)}>Save</Button>
           </Col>

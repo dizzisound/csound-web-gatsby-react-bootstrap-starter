@@ -15,7 +15,7 @@ const Layout = ({ children,pageInfo }) => {
   `)
   return (
     <>
-      <Container fluid="false">
+      <Container fluid className="page">
         <Row>
           <Col></Col>
           <Col md="auto">

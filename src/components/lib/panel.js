@@ -120,7 +120,7 @@ class Panel extends React.Component {
     let rcomp = components
     if (this.props.def.vertical) {
       rcomp = (
-        <Col className={"test"}>
+        <Col className="patvertical">
           {components.map((c,i) => (
               <Row className="g-0" key={"v"+i}>{c}</Row>
           )
@@ -142,7 +142,7 @@ class Panel extends React.Component {
       return (
         <Col className="patcol">
           <Row className="g-0"><Col className="patlabel">{label}</Col></Row>
-          <Row className="g-0" style={{ flexWrap: this.props.def.wrap ? "wrap" : "nowrap" }}>
+          <Row className="g-0 patbody" style={{ flexWrap: this.props.def.wrap ? "wrap" : "nowrap" }}>
             {rcomp}
           </Row>
         </Col>
@@ -150,7 +150,7 @@ class Panel extends React.Component {
     } else {
       return (
         <Col className="patcol" md={"auto"}>
-          <Row className="g-0" style={{ flexWrap: this.props.def.wrap ? "wrap" : "nowrap" }}>
+          <Row className="g-0 patbody" style={{ flexWrap: this.props.def.wrap ? "wrap" : "nowrap" }}>
             {rcomp}
           </Row>
         </Col>

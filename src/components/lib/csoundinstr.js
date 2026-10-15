@@ -394,7 +394,7 @@ class CsoundInstr extends React.Component {
       <Row className="instroot" tabIndex={0} onKeyDown={this.onKeyDown.bind(this)} onKeyUp={this.onKeyUp.bind(this)}
            ref={ref => this.root.current = ref}>
         <Col>
-          <Row style={{marginBottom: 5}}>
+          <Row className="insthead">
             <Col className={this.state.csndstatus}>Csound {this.state.csoundLoaded}</Col>
             <Col>
               {!this.state.started ?
@@ -440,16 +440,16 @@ class CsoundInstr extends React.Component {
             <Instrument osc={this.props.osc} inst={this.inst} onChange={this.handleUpdate.bind(this)}
                         ref={ref => this.instrument.current = ref}/>
           </Col></Row>
-          <Row style={{marginBottom: 5}} className="g-0 instfooter">
-            <Col style={{margin: 'auto', textAlign: 'left'}} md='auto'>Computer keyboard settings:</Col>
-            <Col style={{margin: 'auto', textAlign: 'right'}}>Vel:&nbsp;&nbsp;</Col>
-            <Col><HFader onChange={this.onVelChange.bind(this)} defval={100} min={0} max={127}
+          <Row className="g-0 instfooter">
+            <Col className="footer-title" md='auto'>Computer keyboard settings:</Col>
+            <Col className="footer-label">Vel:</Col>
+            <Col className="footer-fader"><HFader onChange={this.onVelChange.bind(this)} defval={100} min={0} max={127}
                          vals={[0, 20, 40, 60, 80, 100, 120]} step={1}/></Col>
-            <Col style={{margin: 'auto', textAlign: 'right'}}>Octave:&nbsp;&nbsp;</Col>
-            <Col><HFader onChange={this.onOctaveChange.bind(this)} min={0} max={9} defval={5}
+            <Col className="footer-label">Octave:</Col>
+            <Col className="footer-fader"><HFader onChange={this.onOctaveChange.bind(this)} min={0} max={9} defval={5}
                          vals={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]} step={1}/></Col>
             {this.props.keyboard ? (
-              <Col style={{margin: 'auto'}}>
+              <Col className="footer-action" md="auto">
                 <Button onClick={this.onOpenKeyboard.bind(this)} variant="secondary">Open screen keyboard</Button>
               </Col>
             ) : ""
