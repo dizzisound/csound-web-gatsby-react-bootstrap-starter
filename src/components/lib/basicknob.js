@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Util from "./util"
 
 class BasicKnob extends React.Component {
   static propTypes = {
@@ -281,7 +282,7 @@ class BasicKnob extends React.Component {
     ctx.lineCap = this.props.lineCap;
     // background arc
     ctx.beginPath();
-    ctx.strokeStyle = this.props.bgColor;
+    ctx.strokeStyle = Util.cssColor(this.props.bgColor, this.canvasRef);
     ctx.arc(
       this.xy,
       this.xy,
@@ -294,7 +295,7 @@ class BasicKnob extends React.Component {
     // foreground arc
     const a = this.getArcToValue(this.props.value);
     ctx.beginPath();
-    ctx.strokeStyle = this.props.fgColor;
+    ctx.strokeStyle = Util.cssColor(this.props.fgColor, this.canvasRef);
     ctx.arc(
       this.xy,
       this.xy,

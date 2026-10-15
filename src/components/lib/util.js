@@ -27,6 +27,15 @@ export default class Util {
        return Math.floor(Math.random() * max); 
     }
 
+    // Resolve a CSS colour such as "var(--cs-blue)" to a value a canvas accepts
+    // (canvas and Konva can't use CSS variables). Other colours pass through.
+    static cssColor(color, el) {
+      const m = /^var\((--[\w-]+)\s*(?:,\s*(.+))?\)$/.exec(color || "");
+      if (!m || typeof window === "undefined") return color;
+      const value = getComputedStyle(el || document.documentElement).getPropertyValue(m[1]).trim();
+      return value || m[2] || color;
+    }
+
     // Number of decimals implied by a step, e.g. 1 -> 0, 0.25 -> 2, 1e-7 -> 7.
     static decimalsOf(step) {
       const [mantissa, exp] = String(step).toLowerCase().split("e");

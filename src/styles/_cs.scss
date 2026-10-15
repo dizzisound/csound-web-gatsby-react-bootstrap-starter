@@ -189,3 +189,8 @@ $mynewcolor: $cs-blue;
 .status-badge.err .status-dot { background-color: $cs-danger; }
 .status-badge.muted { color: $cs-text-muted; }
 .status-badge[title] { cursor: help; }
+
+// ---- canvas widgets ----
+// XY pad and plots: dark well with a thin border (the dot/line colours come
+// from the palette via Util.cssColor)
+.xypad { background-color: $cs-bg; border: 1px solid $cs-border; border-radius: 4px; padding: 0; }

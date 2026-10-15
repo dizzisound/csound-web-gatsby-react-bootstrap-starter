@@ -23,8 +23,8 @@ const railInnerStyle = {
   transform: "translate(-50%, 0%)",
   borderRadius: 4,
   pointerEvents: "none",
-  //backgroundColor: 'rgb(155,155,155)',
-  backgroundColor: "#FDF6E3",
+  backgroundColor: "var(--cs-bg)",
+  border: "1px solid var(--cs-border)",
 }
 
 export function SliderRail({ getRailProps }) {
@@ -80,7 +80,8 @@ export function Handle({
           height: 22,
           borderRadius: "10%",
           boxShadow: "1px 1px 1px 1px rgba(0, 0, 0, 0.3)",
-          backgroundColor: "#0044BB",
+          border: "1px solid rgba(255, 255, 255, 0.55)",
+          backgroundColor: "var(--cs-blue)",
         }}
       />
     </Fragment>
@@ -122,10 +123,10 @@ export function KeyboardHandle({
         height: 10,
         zIndex: 5,
         cursor: "pointer",
-        border: 4,
-        borderRadius: "10%",
-        boxShadow: "1px 1px 1px 1px rgba(0, 0, 0, 0.3)",
-        backgroundColor: "#0044EE",
+        border: "1px solid rgba(255, 255, 255, 0.55)",
+        borderRadius: 3,
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.5)",
+        backgroundColor: "var(--cs-blue)",
       }}
       {...getHandleProps(id)}
     />
@@ -151,7 +152,7 @@ export function Track({ source, target, getTrackProps }) {
       style={{
         position: "absolute",
         zIndex: 1,
-        backgroundColor: "#b28900",
+        backgroundColor: "var(--cs-accent)",
         borderRadius: 7,
         cursor: "pointer",
         width: 14,
@@ -192,7 +193,7 @@ export function Tick({ tick, format = d => d }) {
           marginLeft: 10,
           height: 1,
           width: 6,
-          backgroundColor: "rgb(200,200,200)",
+          backgroundColor: "var(--cs-text-muted)",
           top: `${tick.percent}%`,
         }}
       />

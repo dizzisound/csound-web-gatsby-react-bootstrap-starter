@@ -37,7 +37,7 @@ class FuncPlot extends React.Component {
 
   render() {
     return (
-      <Col md="auto" style={{ backgroundColor: "#FDF6E3" }}>
+      <Col md="auto" className="xypad">
         <Stage x={0} y={0} width={this.props.w} height={this.props.h}>
           <Layer>
             <Shape stroke="black" strokeWith={3} sceneFunc={(context, shape) => {

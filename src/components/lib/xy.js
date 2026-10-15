@@ -2,6 +2,7 @@ import React from "react"
 import { Row, Col } from "react-bootstrap"
 import Label from "./label"
 import { Stage, Layer, Circle } from "react-konva"
+import Util from "./util"
 
 class XY extends React.Component {
   constructor(props) {
@@ -81,14 +82,15 @@ class XY extends React.Component {
           <Label tooltip={'ctrl:100 osc:/'+this.props.def.osc+'/'+this.props.def.id+'/x'} label="x:"/>
           <Col className="xyvalue">{this.round(this.state.x)}</Col>
           <Label tooltip={'ctrl 101 osc:/'+this.props.def.osc+'/'+this.props.def.id+'/y'} label="y:"/>
-          <Col className="xyvalue">{this.round(-this.state.y)}</Col>
+          <Col className="xyvalue">{this.round(this.state.y)}</Col>
         </Row>
         <Row className="g-0">
-          <Col style={{ backgroundColor: "#FDF6E3" }}>
+          <Col className="xypad">
             <Stage width={this.h + 2} height={this.h + 2}>
               <Layer>
                 <Circle dragBoundFunc={this.dragBound.bind(this)} onDragMove={this.drag.bind(this)}
-                        ref={ref => (this.circle = ref)} x={dx} y={dy} radius={5} fill="rgb(0,68,238)" draggable>
+                        ref={ref => (this.circle = ref)} x={dx} y={dy} radius={6} fill={Util.cssColor("var(--cs-accent)")}
+                        stroke={Util.cssColor("var(--cs-bg)")} strokeWidth={1} draggable>
                 </Circle>
               </Layer>
             </Stage>

@@ -35,7 +35,8 @@ class Knob extends React.Component {
         <Row className="g-0 justify-content-center">
           <Col xs="auto">
             <BasicKnob digits={this.props.def.digits} min={this.props.def.min} max={this.props.def.max}
-                       step={this.props.def.step} inputColor="#FFFFFF" fgColor="#0077FF"
+                       step={this.props.def.step} inputColor="var(--cs-text)" fgColor="var(--cs-blue)"
+                       bgColor="var(--cs-surface-3)" font="system-ui, sans-serif" fontWeight="600"
                        width={this.props.def.width || 50} height={this.props.def.height || 50} angleOffset={210}
                        angleArc={300} value={this.state.value} onChange={this.handleChange} />
           </Col>

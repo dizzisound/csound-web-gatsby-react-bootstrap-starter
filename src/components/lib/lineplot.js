@@ -1,6 +1,7 @@
 import React from "react"
 import { Col } from "react-bootstrap"
 import { Stage, Layer, Shape, Rect } from "react-konva"
+import Util from "./util"
 
 class LinePlot extends React.Component {
   draw(context, shape, arr) {
@@ -34,13 +35,13 @@ class LinePlot extends React.Component {
 
   render() {
     return (
-      <Col xs="auto" style={{ backgroundColor: "#FDF6E3" }}>
+      <Col xs="auto" className="xypad">
         <Stage x={0} y={0} width={this.props.width} height={this.props.height}>
           <Layer>
-            <Rect fill="#006600" x={0} y={0} width={this.props.width} height={this.props.height}/>
+            <Rect fill={Util.cssColor("var(--cs-bg)")} x={0} y={0} width={this.props.width} height={this.props.height}/>
           </Layer>
           <Layer>
-            <Shape stroke="#aaaaaa" strokeWith={3} sceneFunc={(context, shape) => {
+            <Shape stroke={Util.cssColor("var(--cs-accent)")} strokeWith={3} sceneFunc={(context, shape) => {
               this.draw(context, shape, this.props.data)
             }}>
             </Shape>
