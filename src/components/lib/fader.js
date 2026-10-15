@@ -153,15 +153,8 @@ class Fader extends React.Component {
         </Col>
         </Row>
         <Row className="g-0 justify-content-center"><Col md="auto"><ReactNumberFormat.NumericFormat
-          onValueChange={this.onTextValueChange} value={this.formatVal(this.toVal(updates[0]))} style={{
-          color: "white",
-          backgroundColor: "black",
-          textAlign: "center",
-          margin: 2,
-          paddingTop: 0,
-          paddingBottom: 0,
-          border: 0,
-        }} size={this.props.def.size || 2} decimalScale={this.decimalScale} fixedDecimalScale={false} /></Col></Row>
+          onValueChange={this.onTextValueChange} value={this.formatVal(this.toVal(updates[0]))}
+          className="valuebox" size={this.props.def.size || 2} decimalScale={this.decimalScale} fixedDecimalScale={false} /></Col></Row>
       </Col>
     )
   }

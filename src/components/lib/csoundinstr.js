@@ -398,7 +398,8 @@ class CsoundInstr extends React.Component {
             <Col className={this.state.csndstatus}>Csound {this.state.csoundLoaded}</Col>
             <Col>
               {!this.state.started ?
-                <Button onClick={this.handleStart.bind(this)}>audio context paused - click here</Button> :
+                <Button size="sm" variant="warning" onClick={this.handleStart.bind(this)}
+                        title="The browser paused audio until you interact with the page">&#9654; Start audio</Button> :
                 <div>audio enabled</div>
               }
             </Col>
@@ -406,12 +407,12 @@ class CsoundInstr extends React.Component {
               <>
                 <Col>
                   <Select onChange={this.handleMidiSelect.bind(this)} options={devices} value={this.state.currentDevice}
-                          isClearable={false} isSearchable={false} className="tunselect"/>
+                          isClearable={false} isSearchable={false} className="tunselect" classNamePrefix="cs-select"/>
                 </Col>
                 <Col>
                   <Select onChange={this.onChannelChange.bind(this)} options={midichannels}
                           value={this.state.midichannel}
-                          isClearable={false} isSearchable={false} className="tunselect"/>
+                          isClearable={false} isSearchable={false} className="tunselect" classNamePrefix="cs-select"/>
                 </Col>
               </>
             ) : <Col className="midierr" title={this.state.midierr}>{this.state.midierr}</Col>
@@ -433,7 +434,7 @@ class CsoundInstr extends React.Component {
             ) : ""}
             <Col>
               <Select onChange={this.handleSelect} options={options} value={this.state.currentTuning}
-                      isClearable={false} isSearchable={false} className="tunselect"/>
+                      isClearable={false} isSearchable={false} className="tunselect" classNamePrefix="cs-select"/>
             </Col>
           </Row>
           <Row><Col>

@@ -36,6 +36,12 @@ $link-decoration: none;
 $link-hover-color: #fff0a0;
 $headings-color: $cs-text;
 $border-color: $cs-border;
+// buttons and focus
+$btn-font-weight: 500;
+$btn-border-radius: $cs-radius;
+$btn-border-radius-sm: 5px;
+$btn-padding-x-sm: 0.65rem;
+$focus-ring-color: rgba(252, 222, 63, 0.4);
 $nav-tabs-border-color: $cs-border;
 $nav-tabs-link-active-color: $cs-text;
 $nav-tabs-link-active-bg: $cs-surface;

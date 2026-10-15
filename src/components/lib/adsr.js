@@ -1,5 +1,6 @@
 import React from "react"
-import { Row, Col, Button } from "react-bootstrap"
+import { Row, Col } from "react-bootstrap"
+import PanelSwitch from "./panelswitch"
 import Knob from "./knob"
 import LinePlot from "./lineplot"
 
@@ -105,18 +106,13 @@ class Adsr extends React.Component {
   }
 
   render() {
-    const st = { width: "100%", padding: 0, marginTop: 0 };
     return (
       <Col xs="auto" className="patcol">
         <Row className="g-0">
           <Col className="patlabel">
-            {!this.props.def.on?this.props.def.label:(
-              <Button style={st} size="sm" variant={this.state.on ? "primary" : "secondary"}
-              onClick={this.handleClick.bind(this)}>
-                 {this.props.def.label}
-              </Button>
-              )
-            }
+            {!this.props.def.on ? this.props.def.label : (
+              <PanelSwitch label={this.props.def.label} on={this.state.on} onClick={this.handleClick.bind(this)} />
+            )}
           </Col>
         </Row>
         <Row className="g-0 patbody" style={{ flexWrap: "nowrap" }}>

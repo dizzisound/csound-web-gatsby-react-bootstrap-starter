@@ -42,15 +42,19 @@ $mynewcolor: $cs-blue;
 .patcol { background-color: $cs-surface; border-radius: $cs-radius; padding-bottom: $cs-space-3; }
 .patlabel { text-align: center; white-space: nowrap; background-color: $cs-surface-2; border-radius: $cs-radius $cs-radius 0 0; padding: $cs-space-1 $cs-space-2; margin-bottom: $cs-space-2; }
 .instfooter { background-color: $cs-surface-2; border-radius: $cs-radius; }
-.tunselect { background-color: $cs-surface-2; border-radius: 3px; color: black; z-index:1000}
+.tunselect { border-radius: $cs-radius; z-index: 1000; }
 .tooltip > .tooltip-inner { background-color: rgba(50,50,50,127);text-overflow: ellipsis;}
 .tooltip > .tooltip-arrow { background-color: #333;}
 .alert > .modal-content { background-color: rgba(50,50,50,127);}
 .spinner { display: inline-flex; align-items: stretch; }
-.spinner input { text-align: center; }
+.spinner input { text-align: center; color: $cs-text; background-color: $cs-bg; border: 1px solid $cs-border; border-right: 0; border-radius: 4px 0 0 4px; padding: 1px 4px; }
+.spinner input:focus { outline: none; border-color: $cs-accent; }
 .spinner input.spinner-pending { font-style: italic; color: $cs-danger; }
 .spinner-buttons { display: flex; flex-direction: column; }
-.spinner-buttons button { flex: 1; padding: 0 4px; font-size: 8px; line-height: 1; border: 1px solid $cs-border; background-color: $cs-surface-2; color: $cs-text; }
+.spinner-buttons button { flex: 1; padding: 0 5px; font-size: 8px; line-height: 1; border: 1px solid $cs-border; background-color: $cs-surface-2; color: $cs-text-muted; }
+.spinner-buttons button:first-child { border-radius: 0 4px 0 0; border-bottom: 0; }
+.spinner-buttons button:last-child { border-radius: 0 0 4px 0; }
+.spinner-buttons button:hover { background-color: $cs-surface-3; color: $cs-text; }
 
 // ---- spacing and layout ----
 .page { padding-top: $cs-space-4; padding-bottom: $cs-space-5; }
@@ -88,3 +92,57 @@ $mynewcolor: $cs-blue;
 .instfooter .footer-label { flex: 0 0 auto; }
 .instfooter .footer-fader { flex: 1 1 8rem; max-width: 12rem; }
 .instfooter .footer-action { margin-left: auto; }
+
+// ---- buttons and controls ----
+// secondary actions: quiet "ghost" buttons on the navy surfaces
+.btn-secondary {
+    @include button-variant(
+        $cs-surface-2, $cs-border, $cs-text,
+        $hover-background: $cs-surface-3, $hover-border: $cs-text-muted, $hover-color: #fff,
+        $active-background: $cs-surface-3, $active-border: $cs-accent, $active-color: #fff,
+        $disabled-background: $cs-surface-2, $disabled-border: $cs-border, $disabled-color: $cs-text-muted
+    );
+}
+
+// select widget (radio group): the chosen option is filled blue
+.selectbtngroup .btn { background-color: $cs-surface-2; border-color: $cs-border; color: $cs-text; }
+.selectbtngroup .btn:hover { background-color: $cs-surface-3; }
+.selectbtngroup .btn-check:checked + .btn { background-color: $cs-blue; border-color: $cs-blue; color: #fff; }
+
+// on/off switch in a panel title (PanelSwitch)
+.patswitch {
+    display: inline-flex; align-items: center; gap: $cs-space-2;
+    background: none; border: 0; padding: 0; color: inherit; font: inherit; cursor: pointer;
+}
+.patswitch-track {
+    position: relative; display: inline-block; width: 28px; height: 16px; border-radius: 8px;
+    background-color: $cs-bg; border: 1px solid $cs-border; transition: background-color .15s;
+}
+.patswitch-thumb {
+    position: absolute; top: 2px; left: 2px; width: 10px; height: 10px; border-radius: 50%;
+    background-color: $cs-text-muted; transition: transform .15s, background-color .15s;
+}
+.patswitch.on .patswitch-track { background-color: $cs-blue; border-color: $cs-blue; }
+.patswitch.on .patswitch-thumb { transform: translateX(12px); background-color: #fff; }
+.patswitch:focus-visible { outline: 2px solid $focus-ring-color; outline-offset: 2px; border-radius: 4px; }
+
+// value read-outs under faders
+.valuebox {
+    color: $cs-text; background-color: $cs-bg; border: 1px solid $cs-border; border-radius: 4px;
+    text-align: center; margin: 2px; padding: 0 2px;
+}
+.valuebox:focus { outline: none; border-color: $cs-accent; }
+
+// react-select dropdowns (tuning, MIDI device, MIDI channel)
+.tunselect .cs-select__control {
+    min-height: 31px; background-color: $cs-surface-2; border-color: $cs-border; box-shadow: none;
+}
+.tunselect .cs-select__control:hover { border-color: $cs-text-muted; }
+.tunselect .cs-select__control--is-focused { border-color: $cs-accent; }
+.tunselect .cs-select__single-value { color: $cs-text; }
+.tunselect .cs-select__indicator-separator { background-color: $cs-border; }
+.tunselect .cs-select__indicator { color: $cs-text-muted; padding: 4px 8px; }
+.tunselect .cs-select__menu { background-color: $cs-surface-2; border: 1px solid $cs-border; }
+.tunselect .cs-select__option { color: $cs-text; background-color: transparent; }
+.tunselect .cs-select__option--is-focused { background-color: $cs-surface-3; }
+.tunselect .cs-select__option--is-selected { background-color: $cs-blue; color: #fff; }

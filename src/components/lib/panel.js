@@ -1,5 +1,5 @@
 import React from "react"
-import { Button, Row, Col } from "react-bootstrap"
+import { Row, Col } from "react-bootstrap"
 import Fader from "./fader"
 import Knob from "./knob"
 import Switch from "./switch"
@@ -8,6 +8,7 @@ import NumberInput from "./numberinput"
 import Toggle from "./toggle"
 import Adsr from "./adsr"
 import XYPad from "./xy"
+import PanelSwitch from "./panelswitch"
 
 class Panel extends React.Component {
 
@@ -129,14 +130,8 @@ class Panel extends React.Component {
       )
     }
     let label = this.props.label
-    const st = { width: "100%", padding: 0, marginTop: 0 }
     if (this.props.def.on) {
-      label = (
-        <Button style={st} size="sm" variant={this.state.on ? "primary" : "secondary"}
-                onClick={this.handleClick.bind(this)}>
-          {this.props.label}
-        </Button>
-      )
+      label = <PanelSwitch label={this.props.label} on={this.state.on} onClick={this.handleClick.bind(this)} />
     }
     if (this.props.label) {
       return (
