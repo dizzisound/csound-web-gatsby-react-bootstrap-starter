@@ -15,8 +15,15 @@ class Knob extends React.Component {
   componentDidMount() {
   }
 
+  // position on the knob's arc, 0..1 (logarithmic for log knobs)
+  arcPosition(v) {
+    const { min, max, log } = this.props.def
+    return log === true ? Math.log(v / min) / Math.log(max / min) : (v - min) / (max - min)
+  }
+
   handleChange = (newValue) => {
-    if (Math.abs(newValue - this.state.value) > this.props.def.max / 5) return
+    // ignore jumps of more than a fifth of the arc (mouse wrapping past the end)
+    if (Math.abs(this.arcPosition(newValue) - this.arcPosition(this.state.value)) > 0.2) return
     this.setState({ value: newValue })
     this.props.onChange(this.props.def.id, newValue)
   }
@@ -37,6 +44,7 @@ class Knob extends React.Component {
             <BasicKnob digits={this.props.def.digits} min={this.props.def.min} max={this.props.def.max}
                        step={this.props.def.step} inputColor="var(--cs-text)" fgColor="var(--cs-blue)"
                        bgColor="var(--cs-surface-3)" font="system-ui, sans-serif" fontWeight="600"
+                       log={this.props.def.log === true}
                        width={this.props.def.width || 50} height={this.props.def.height || 50} angleOffset={210}
                        angleArc={300} value={this.state.value} onChange={this.handleChange} />
           </Col>

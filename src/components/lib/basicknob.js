@@ -105,6 +105,12 @@ class BasicKnob extends React.Component {
     this.canvasRef.removeEventListener('touchstart', this.handleTouchStart);
   }
 
+  // log mode: one arrow key / wheel notch moves 1/100 of the range on the log
+  // scale, and at least one `step` (otherwise rounding could keep it in place)
+  logRatio = () => Math.pow(this.props.max / this.props.min, 1 / 100);
+  logUp = (v) => Math.max(parseFloat(v) * this.logRatio(), parseFloat(v) + parseFloat(this.props.step));
+  logDown = (v) => Math.min(parseFloat(v) / this.logRatio(), parseFloat(v) - parseFloat(this.props.step));
+
   getArcToValue = (v) => {
     let startAngle;
     let endAngle;
@@ -138,10 +144,10 @@ class BasicKnob extends React.Component {
     return devicePixelRatio / backingStoreRatio;
   };
 
+  // `step` is the value's precision in both modes; in log mode only the angle
+  // mapping is logarithmic (it used to treat `step` as a multiplier).
   coerceToStep = (v) => {
-    let val = !this.props.log
-    ? (~~(((v < 0) ? -0.5 : 0.5) + (v / this.props.step))) * this.props.step
-    : Math.pow(this.props.step, ~~(((Math.abs(v) < 1) ? -0.5 : 0.5) + (Math.log(v) / Math.log(this.props.step))));
+    let val = (~~(((v < 0) ? -0.5 : 0.5) + (v / this.props.step))) * this.props.step;
     val = Math.max(Math.min(val, this.props.max), this.props.min);
     if (isNaN(val)) { val = 0; }
     return Math.round(val * 1000) / 1000;
@@ -224,13 +230,13 @@ class BasicKnob extends React.Component {
       this.props.onChange(this.coerceToStep(
         !this.props.log
         ? this.props.value + this.props.step
-        : this.props.value * this.props.step
+        : this.logUp(this.props.value)
       ));
     } else if (e.deltaX < 0 || e.deltaY < 0) {
       this.props.onChange(this.coerceToStep(
         !this.props.log
         ? this.props.value - this.props.step
-        : this.props.value / this.props.step
+        : this.logDown(this.props.value)
       ));
     }
   };
@@ -241,14 +247,14 @@ class BasicKnob extends React.Component {
       this.props.onChange(this.coerceToStep(
         !this.props.log
         ? this.props.value - this.props.step
-        : this.props.value / this.props.step
+        : this.logDown(this.props.value)
       ));
     } else if (e.keyCode === 38 || e.keyCode === 39) {
       e.preventDefault();
       this.props.onChange(this.coerceToStep(
         !this.props.log
         ? parseFloat(this.props.value) + parseFloat(this.props.step)
-        : this.props.value * this.props.step
+        : this.logUp(this.props.value)
       ));
     }
   };

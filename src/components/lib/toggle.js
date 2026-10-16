@@ -11,8 +11,11 @@ class Toggle extends React.Component {
   componentDidMount() {
   }
 
+  // values from presets, defaults and OSC: show them and send them to Csound
   setValue(val) {
-    this.setState({on:val});
+    const on = !!val && val !== "0"
+    this.setState({ on: on ? 1 : 0 })
+    this.props.onChange(this.props.def.id, on)
   }
 
   handleClick() {

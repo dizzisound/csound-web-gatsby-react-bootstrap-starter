@@ -261,7 +261,7 @@ endin
 | `/rsw/<widget id>` | value | set a widget, e.g. `/rsw/weight 0.75` |
 | `/rsw/<panel id>` | 1 or 0 | switch an on/off panel |
 
-The xy component can't be set over OSC yet: it expects both coordinates at once.
+The xy component takes one coordinate per message: `/rsw/xy/num1 0.5` (`/rsw/<id>/<idx or idy>`).
 
 A minimal bridge with `osc-js` (already a dependency), relaying OSC from UDP port 41234 (e.g. Pure Data's `[netsend -u -b]` after `[oscformat]`) to the page:
 
@@ -329,9 +329,26 @@ The faders and knobs support editing values and stepping with the keyboard up an
 | unit | string | a unit shown after the value, e.g. `"s"` or `"Hz"` | no |
 | height | number | the height of the fader (default 256) or knob (default 50) | no |
 | width | number | the width of the knob (default 50) | no |
-| log | boolean | logarithmic scale, fader only (`min` must be > 0) | no |
+| log | boolean | logarithmic scale (`min` must be > 0) | no |
 | size | number | the width of the fader's value box in characters (default 2) | no |
 | digits | number | the number of characters of the knob's value | no |
+
+#### multifader
+A row of `count` faders sharing one range; fader `k` (from `start`) uses the channel `<id>-<k>` and is labelled `k`.
+
+| parameter | type | description | mandatory |
+|------|------|-----------------------------|-------------|
+| type | string | must be 'multifader' | yes |
+| id | string | the base id; the channels are `<id>-<start>` … `<id>-<start+count-1>` | yes |
+| label | string | the title displayed above the faders | no |
+| start | number | the number of the first fader | yes |
+| count | number | how many faders | yes |
+| min | number | the minimum value | yes |
+| max | number | the maximum value | yes |
+| step | number | the precision | yes |
+| defval | number or list | the default value of all faders, or one value per fader | yes |
+| unit | string | a unit shown after the values | no |
+| height | number | the height of the faders | no |
 
 #### spinner
 A number input with up and down arrows.
@@ -380,7 +397,6 @@ A radio button selection; it sends the `value` of the chosen item.
 
 #### toggle
 A button that switches between on and off; it sends true/false on the channel `<id>`.
-Values set from presets or OSC change the button but are not sent to Csound yet.
 
 | parameter | type | description | mandatory |
 |------|------|-----------------------------|-------------|
