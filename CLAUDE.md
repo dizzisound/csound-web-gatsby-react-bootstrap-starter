@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A Gatsby 5 / React 19 / react-bootstrap starter for building browser-based Csound instruments (Csound compiled to WASM). A page declares an instrument GUI as a plain JS object; the library in `src/components/lib/` renders it and wires every widget to a Csound control channel. `feature/gatsby5_update` holds the migration from an older Gatsby to Gatsby 5; `feature/react19_update` builds the React 19 upgrade on top of it.
+A Gatsby 5 / React 19 / react-bootstrap starter for building browser-based Csound instruments (Csound compiled to WASM). A page declares an instrument GUI as a plain JS object; the library in `src/components/lib/` renders it and wires every widget to a Csound control channel. `feature/gatsby5_update` is the main working branch (and GitHub's default branch): work happens on `feature/*` / `fix/*` branches that are fast-forwarded into it; merged branches are kept as archives.
 
 ## Commands
 
@@ -18,7 +18,7 @@ npm run format       # prettier --write over src/**/*.{js,jsx}
 npx gatsby clean     # clear .cache/ and public/ (do this before a deploy build)
 ```
 
-There are no tests (`npm test` is a placeholder echo). Verify changes with `npm run build`, then the dev server, checking that the status cell shows "Csound running".
+There are no tests (`npm test` is a placeholder echo). Verify changes with `npm run build`, then the dev server, checking that the status bar shows a green **Csound** badge.
 
 There is no lint script or `.eslintrc`, but `gatsby develop` runs ESLint with Gatsby's built-in config (react-app rules) on every bundled file and prints the warnings in the terminal and the browser console (`[HMR] bundle 'develop' has N warnings`). `gatsby build` does not lint. `src/` is currently warning-free; keep it that way.
 
@@ -69,6 +69,7 @@ Widgets do not expose refs. Instead each widget, in its constructor, attaches a 
 - Production inlines the CSS into a `<style>` tag in every page, so the CSS must stay pure ASCII: a BOM there invalidates Bootstrap's `:root` variables (fonts, colours). `gatsby-config.js` handles it with Sass `charset: false` plus a small PostCSS plugin that re-escapes non-ASCII characters (Bootstrap's blockquote "—"). Development doesn't inline, so check style changes in a production build too.
 - Gatsby's cache doesn't reliably pick up changes to Sass partials or plugin options: run `npx gatsby clean` before building when checking style changes.
 - JSX: `gatsby-config.js` sets `jsxRuntime: "automatic"` (Gatsby 5 defaults to classic, which React 19 flags in development). `import React` is only needed for hooks/`React.Component`, not for JSX.
+- Design: `design/` holds the Figma files (`csound-web-ui.fig`, `csound-web-ui-v2.fig`) and `design/system/`, a design system generated from the code (`tokens.json` mirrors `_variables.scss`; guidelines in `design/system/README.md`; per-component previews). The code is the source of truth: when changing tokens or widget styles, update `design/system/` to match.
 - Document head: no react-helmet. Each page exports `Head` (Gatsby Head API) rendering `<Seo title="…" />` from `src/components/seo.js` (title, description from `siteMetadata`, keywords); `<html lang>` is set in `gatsby-ssr.js` (`onRenderBody`). A new page needs its own `export const Head`.
 
 ## Conventions
@@ -77,4 +78,11 @@ Widgets do not expose refs. Instead each widget, in its constructor, attaches a 
 - React 19: `propTypes` are no longer checked at runtime (kept as documentation only), and `defaultProps` only works on class components — use default parameters in function components. `react-numeric-input` was replaced by `lib/spinner.js` (a `NumericFormat` wrapper) for React 19 compatibility.
 - Prettier config: no semicolons, double quotes, 2-space indent, `es5` trailing commas. Existing files are not uniformly formatted — match the file you are editing rather than reformatting it.
 - `src/components/lib/` is a reusable component library with its own LICENSE/README (vendored from a separate "react-components" project); keep app-specific code in `src/pages/` and `src/components/`.
-- The widget definition options (panel, fader/hfader/knob, spinner, xy, select) are documented in tables in `README.md`; update them when changing a widget's definition schema.
+- The `CsoundInstr` props and the widget definition options (panel, tabpanel, fader/knob, spinner, xy, select, toggle, adsr, plus the common `midictrl`/`tooltip`) are documented in tables in `README.md`; update them when changing a prop or a widget's definition schema. The README's example page is a copy of `src/pages/index.js`: keep them identical.
+
+## Known issues
+
+- `multifader` (in `panel.js`) is broken: `Instrument.extractComponents` expects a `widgets` list it doesn't have, and its generated faders get no `onChange`. Not documented in the README.
+- `toggle`: `setValue` (presets, defaults, OSC) updates the button but doesn't call `onChange`, so Csound isn't told.
+- `xy` over OSC: `/<osc>/xy/<idx>` passes only one coordinate, and `XY.setValue` needs both, so the other becomes `NaN`.
+- `knob` ignores `log` (`knob.js` doesn't pass it to `BasicKnob`), although `Components.lfo` sets `log: true` on its rate knob.
