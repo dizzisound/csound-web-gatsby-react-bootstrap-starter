@@ -78,11 +78,4 @@ Widgets do not expose refs. Instead each widget, in its constructor, attaches a 
 - React 19: `propTypes` are no longer checked at runtime (kept as documentation only), and `defaultProps` only works on class components — use default parameters in function components. `react-numeric-input` was replaced by `lib/spinner.js` (a `NumericFormat` wrapper) for React 19 compatibility.
 - Prettier config: no semicolons, double quotes, 2-space indent, `es5` trailing commas. Existing files are not uniformly formatted — match the file you are editing rather than reformatting it.
 - `src/components/lib/` is a reusable component library with its own LICENSE/README (vendored from a separate "react-components" project); keep app-specific code in `src/pages/` and `src/components/`.
-- The `CsoundInstr` props and the widget definition options (panel, tabpanel, fader/knob, spinner, xy, select, toggle, adsr, plus the common `midictrl`/`tooltip`) are documented in tables in `README.md`; update them when changing a prop or a widget's definition schema. The README's example page is a copy of `src/pages/index.js`: keep them identical.
-
-## Known issues
-
-- `multifader` (in `panel.js`) is broken: `Instrument.extractComponents` expects a `widgets` list it doesn't have, and its generated faders get no `onChange`. Not documented in the README.
-- `toggle`: `setValue` (presets, defaults, OSC) updates the button but doesn't call `onChange`, so Csound isn't told.
-- `xy` over OSC: `/<osc>/xy/<idx>` passes only one coordinate, and `XY.setValue` needs both, so the other becomes `NaN`.
-- `knob` ignores `log` (`knob.js` doesn't pass it to `BasicKnob`), although `Components.lfo` sets `log: true` on its rate knob.
+- The `CsoundInstr` props and the widget definition options (panel, tabpanel, fader/knob, multifader, spinner, xy, select, toggle, adsr, plus the common `midictrl`/`tooltip`) are documented in tables in `README.md`; update them when changing a prop or a widget's definition schema. The README's example page is a copy of `src/pages/index.js`: keep them identical.

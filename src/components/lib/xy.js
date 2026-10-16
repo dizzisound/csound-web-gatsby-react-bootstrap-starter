@@ -35,10 +35,12 @@ class XY extends React.Component {
     return ((y - 2) / (this.h - 2)) * (this.props.def.maxY - this.props.def.minY) + this.props.def.minY
   }
 
+  // `val` may carry only one coordinate (e.g. OSC /<ns>/<id>/<idx> v):
+  // the other one keeps its current value
   setValue(val) {
-    const x = val[this.props.def.idx]
-    const y = val[this.props.def.idy]
-    console.log(val, x, y)
+    const v = val && typeof val === "object" ? val : {}
+    const x = v[this.props.def.idx] !== undefined ? v[this.props.def.idx] : this.state.x
+    const y = v[this.props.def.idy] !== undefined ? v[this.props.def.idy] : this.state.y
     this.setState({ x: x, y: y })
     this.circle.x(this.toPixX(x))
     this.circle.y(this.toPixY(y))

@@ -19,7 +19,30 @@ class Instrument extends React.Component {
       + (elem.midictrl?' ctrl:'+elem.midictrl:'')
       + (elem.osc? ' osc:/'+elem.osc+'/'+elem.id:'')
   }
+  // A multifader is a row of `count` faders with ids <id>-<start> ... <id>-<start+count-1>;
+  // generate their definitions once, so they register like any other widget.
+  static multifaderWidgets(def) {
+    const widgets = []
+    for (let k = def.start; k < def.start + def.count; k++) {
+      widgets.push({
+        id: def.id + "-" + k,
+        type: "fader",
+        label: "" + k,
+        min: def.min,
+        max: def.max,
+        step: def.step,
+        unit: def.unit,
+        height: def.height,
+        defval: Array.isArray(def.defval) ? def.defval[k - def.start] : def.defval,
+      })
+    }
+    return widgets
+  }
+
   extractComponents(current) {
+    if (current.type === "multifader" && !current.widgets) {
+      current.widgets = Instrument.multifaderWidgets(current)
+    }
     if (current.type === "panel" || current.type === "multifader" || current.type === "tabpanel") {
       current.widgets.forEach(item => this.extractComponents(item))
     } else {
