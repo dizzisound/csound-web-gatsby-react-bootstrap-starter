@@ -284,12 +284,14 @@ osc.open()
 - **Presets**: **Save preset** downloads the current values as `file.json`; **Load preset** reads such a file back.
 
 ### Components
-Every component accepts these options:
+These options work on several components:
 
 | parameter | type | description | mandatory |
 |------|------|-----------------------------|-------------|
-| midictrl | number | MIDI CC number (0-127) that controls this widget | no |
-| tooltip | string | text shown when hovering the label | no |
+| midictrl | number | MIDI CC number (0-127) that controls the widget, scaled into its `min`..`max` (fader, knob, spinner) | no |
+| tooltip | string | text shown when hovering the label (fader, knob, spinner, select, xy) | no |
+
+The label tooltip also lists the widget's MIDI CC and OSC address, e.g. `ctrl:7 osc:/rsw/amp`.
 
 The following components are currently available.
 
@@ -316,6 +318,7 @@ The following components are currently available.
 
 #### fader, knob
 The faders and knobs support editing values and stepping with the keyboard up and down arrows.
+The values sent to Csound are rounded to `step`.
 
 | parameter | type | description | mandatory |
 |------|------|-----------------------------|-------------|
@@ -363,11 +366,12 @@ The arrows (hold to repeat) and the keyboard up/down keys change the value immed
 | max | number | the maximum value (no upper limit if missing) | no |
 | step | number | the precision - use 1 for integer and e.g. 0.01 for floats (default 1) | no |
 | defval | number | the default value | yes |
-| size | number | the number of characters | yes |
+| size | number | the width of the field in characters | no |
 | unit | string | a unit shown after the value, e.g. `"Hz"` | no |
 
 #### xy
 A pad with a draggable dot; it sends two channels. `y` grows downwards (top = `minY`). Values are rounded to 3 decimals.
+The x and y labels' tooltips show each axis' OSC address, e.g. `osc:/rsw/xy/num1`.
 
 | parameter | type | description | mandatory |
 |------|------|-----------------------------|-------------|

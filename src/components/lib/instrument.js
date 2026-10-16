@@ -14,8 +14,12 @@ class Instrument extends React.Component {
     this.data.components.forEach(component => this.extractComponents(component))
     console.log(this.components)
   }
+  // The label tooltip: the definition's own `tooltip` (kept as `tooltipBase`,
+  // so building the instrument twice doesn't append the suffix twice) plus
+  // its MIDI CC and OSC address.
   computeTooltip(elem) {
-    return (elem.tooltip?elem.tooltip:'')
+    if (elem.tooltipBase === undefined) elem.tooltipBase = elem.tooltip || ''
+    return elem.tooltipBase
       + (elem.midictrl?' ctrl:'+elem.midictrl:'')
       + (elem.osc? ' osc:/'+elem.osc+'/'+elem.id:'')
   }

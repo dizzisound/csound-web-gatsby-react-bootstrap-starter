@@ -44,7 +44,7 @@ page (src/pages/index.js)
 
 Widgets do not expose refs. Instead each widget, in its constructor, attaches a setter onto the definition object it was given: `this.props.def.changeValue = this.setValue.bind(this)`. `Instrument` then drives widgets by calling `this.components[id].changeValue(v)`. Consequences:
 
-- The `inst` object passed to `CsoundInstr` is mutated at render time (`changeValue`, `osc`, `tooltip`, and `step` for `log` faders). Don't freeze it or share one definition object between two widgets.
+- The `inst` object passed to `CsoundInstr` is mutated at render time (`changeValue`, `osc`, `tooltip` with the original text kept as `tooltipBase`, `widgets` generated for a `multifader`, and `step` for `log` faders). Don't freeze it or share one definition object between two widgets.
 - Any new widget must set `def.changeValue` and call `props.onChange(def.id, value)` from it, otherwise defaults, preset loading, MIDI CC and OSC won't reach it.
 - Defaults are pushed to Csound by `setDefaultValues()` after the engine starts for every widget that defines a `defval`.
 

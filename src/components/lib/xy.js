@@ -7,12 +7,19 @@ import Util from "./util"
 class XY extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { x: props.def.defval.num1, y: props.def.defval.num2 }
+    this.state = { x: props.def.defval[props.def.idx], y: props.def.defval[props.def.idy] }
     this.h = props.def.height
     this.props.def.changeValue = this.setValue.bind(this)
   }
 
   componentDidMount() {
+  }
+
+  // per-axis tooltip: the definition's own tooltip plus the axis' OSC address
+  axisTooltip(axisId) {
+    const { tooltipBase, tooltip, osc, id } = this.props.def
+    const base = tooltipBase !== undefined ? tooltipBase : (tooltip || "")
+    return (base + (osc ? " osc:/" + osc + "/" + id + "/" + axisId : "")).trim()
   }
 
   round(val) {
@@ -81,9 +88,9 @@ class XY extends React.Component {
     return (
       <Col>
         <Row>
-          <Label tooltip={'ctrl:100 osc:/'+this.props.def.osc+'/'+this.props.def.id+'/x'} label="x:"/>
+          <Label tooltip={this.axisTooltip(this.props.def.idx)} label="x:"/>
           <Col className="xyvalue">{this.round(this.state.x)}</Col>
-          <Label tooltip={'ctrl 101 osc:/'+this.props.def.osc+'/'+this.props.def.id+'/y'} label="y:"/>
+          <Label tooltip={this.axisTooltip(this.props.def.idy)} label="y:"/>
           <Col className="xyvalue">{this.round(this.state.y)}</Col>
         </Row>
         <Row className="g-0">
