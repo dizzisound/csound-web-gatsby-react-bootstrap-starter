@@ -1,0 +1,22 @@
+<!-- @dsCard group="Controls" height=150 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Knob preview</title></head>
+<body style="margin:0;background:var(--cs-bg)">
+<div id="root"></div>
+<script>
+var UI = window.CsoundWebUI, h = React.createElement;
+// shows what a widget would send to its Csound channel
+function Logged(props) {
+  var s = React.useState(props.initial || ""), log = s[0], setLog = s[1];
+  return h("div", { className: "cs-stage" }, props.render(function (id) { return function (v) { setLog(id + " \u2192 " + JSON.stringify(v)); }; }),
+    h("div", { className: "cs-log", "aria-live": "polite" }, log || "Drag or type to change a value"));
+}
+ReactDOM.createRoot(document.getElementById("root")).render(h(Logged, { render: function (on) { return [
+  h(UI.Knob, { key: 1, label: "steps", min: 4, max: 16, step: 1, defaultValue: 10, onChange: on("wavesteps_0") }),
+  h(UI.Knob, { key: 2, label: "amp", min: 0, max: 1, step: 0.01, defaultValue: 0.4, onChange: on("lfo1_amp") }),
+  h(UI.Knob, { key: 3, label: "rte", unit: "Hz", min: 0.01, max: 10, step: 0.01, defaultValue: 2.5, digits: 3, onChange: on("lfo1_rte") })
+]; } }));
+</script>
+</body>
+</html>

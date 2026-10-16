@@ -1,0 +1,98 @@
+{
+ "v": 3,
+ "layout": "files",
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-10-16T14:20:00Z"
+ },
+ "title": "Csound Web UI",
+ "namespace": "CsoundWebUI",
+ "libraries": [
+  {
+   "name": "react",
+   "version": "18.3.1",
+   "global": "React"
+  },
+  {
+   "name": "react-dom",
+   "version": "18.3.1",
+   "global": "ReactDOM"
+  }
+ ],
+ "sections": {},
+ "groups": [
+  "Screens",
+  "Icons"
+ ],
+ "assetGroups": {
+  "Screens": {
+   "name": "Screens",
+   "tile": "l",
+   "order": [
+    "live-index.png",
+    "instrument-v2.png",
+    "instrument-v1.png"
+   ],
+   "files": {
+    "live-index.png": {
+     "name": "live-index.png",
+     "blob": "363679caac7d259dbb7a4e2dc01fac55",
+     "size": 79651,
+     "type": "image/png"
+    },
+    "instrument-v2.png": {
+     "name": "instrument-v2.png",
+     "blob": "6364c4df5ccee260794fa719a8c96982",
+     "size": 147409,
+     "type": "image/png"
+    },
+    "instrument-v1.png": {
+     "name": "instrument-v1.png",
+     "blob": "549caac0046095273c4657ac9a968da8",
+     "size": 74071,
+     "type": "image/png"
+    }
+   }
+  },
+  "Icons": {
+   "name": "Icons",
+   "tile": "s",
+   "order": [
+    "save.svg",
+    "load.svg",
+    "keyboard.svg"
+   ],
+   "files": {
+    "save.svg": {
+     "name": "save.svg",
+     "blob": "919c4453de41af37f207f7ed576abe0e",
+     "size": 246,
+     "type": "image/svg+xml"
+    },
+    "load.svg": {
+     "name": "load.svg",
+     "blob": "1fc4add65c01e4f9e6d5c668cd0c06f4",
+     "size": 257,
+     "type": "image/svg+xml"
+    },
+    "keyboard.svg": {
+     "name": "keyboard.svg",
+     "blob": "9df29e0523f2dc679a115d678dbfa225",
+     "size": 295,
+     "type": "image/svg+xml"
+    }
+   }
+  }
+ },
+ "blobs": {},
+ "docs": {
+  "readme": "project/README.md",
+  "sections": []
+ },
+ "lastChange": {
+  "by": "Daniele Zerbini",
+  "at": "2026-10-16T14:45:00Z",
+  "via": "Claude Code",
+  "note": "Added the React bundle: 17 interactive components on window.CsoundWebUI, live previews and types"
+ }
+}

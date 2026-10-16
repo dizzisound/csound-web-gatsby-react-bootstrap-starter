@@ -1,0 +1,1 @@
+Button icons from `src/components/lib/icons.js`: save (tray with a down arrow), load (open folder), keyboard. 16-unit grid, 1.5 stroke. In code they are inline SVG with `stroke="currentColor"`; these files are drawn in `cs-text` (#e8ecf2) because an `<img>` cannot inherit colour.

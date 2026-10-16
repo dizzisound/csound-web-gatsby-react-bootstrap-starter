@@ -1,0 +1,32 @@
+<!-- @dsCard height=300 -->
+<div class="cover">
+<style>
+.cover{position:relative;width:960px;height:300px;background:var(--cs-bg);font-family:var(--font-sans);overflow:hidden}
+.cover svg{position:absolute;left:480px;top:0}
+.cover .surface{fill:var(--cs-surface)} .cover .band{fill:var(--cs-surface-2)} .cover .blue{fill:var(--cs-blue)} .cover .accent{fill:var(--cs-accent)} .cover .well{fill:var(--cs-bg)}
+.cover .rail{fill:var(--cs-bg);stroke:var(--cs-border);stroke-width:1}
+.cover .tile{rx:var(--radius)} .cover .in{rx:var(--radius-input)}
+.cover h1{position:absolute;left:40px;bottom:64px;margin:0;font-size:72px;line-height:.95;font-weight:600;color:var(--cs-text);letter-spacing:-0.01em;max-width:440px}
+.cover p{position:absolute;left:40px;bottom:32px;margin:0;font-size:14px;color:var(--cs-text-muted);max-width:440px}
+</style>
+<svg width="480" height="300" viewBox="0 0 480 300" aria-hidden="true">
+<!-- blocks: cs-surface panel slab 312x300 (radius), cs-surface-2 title band 24px, cs-blue block 120x96, cs-accent block 48x48 (radius-input)
+     arrangement: one tall panel slab bleeding off top and bottom with a blue satellite above and a small yellow dot block, like a panel row
+     pattern: four fader rails (10px, radius-input) with blue handles at 0.5/0/1/0.1 — the instrument's own ADSR faders, the most specific shape of this UI
+     scales: space-3 (12) gaps, space-5 (24) band, radius 6, radius-input 4 -->
+<rect class="surface tile" x="36" y="-12" width="312" height="324"/>
+<rect class="band" x="36" y="0" width="312" height="24"/>
+<rect class="blue tile" x="360" y="0" width="120" height="96"/>
+<rect class="accent in" x="360" y="108" width="48" height="48"/>
+<rect class="rail in" x="87" y="48" width="10" height="216"/>
+<rect class="rail in" x="159" y="48" width="10" height="216"/>
+<rect class="rail in" x="231" y="48" width="10" height="216"/>
+<rect class="rail in" x="303" y="48" width="10" height="216"/>
+<rect class="blue" x="80" y="151" width="24" height="10" rx="3"/>
+<rect class="blue" x="152" y="254" width="24" height="10" rx="3"/>
+<rect class="blue" x="224" y="43" width="24" height="10" rx="3"/>
+<rect class="blue" x="296" y="232" width="24" height="10" rx="3"/>
+</svg>
+<h1>Csound Web UI</h1>
+<p>Dark console for browser Csound instruments: yellow names, blue acts.</p>
+</div>

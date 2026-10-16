@@ -1,0 +1,22 @@
+<!-- @dsCard group="Read-outs" height=90 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>ValueBox preview</title></head>
+<body style="margin:0;background:var(--cs-bg)">
+<div id="root"></div>
+<script>
+var UI = window.CsoundWebUI, h = React.createElement;
+// shows what a widget would send to its Csound channel
+function Logged(props) {
+  var s = React.useState(props.initial || ""), log = s[0], setLog = s[1];
+  return h("div", { className: "cs-stage" }, props.render(function (id) { return function (v) { setLog(id + " \u2192 " + JSON.stringify(v)); }; }),
+    h("div", { className: "cs-log", "aria-live": "polite" }, log || "Drag or type to change a value"));
+}
+ReactDOM.createRoot(document.getElementById("root")).render(h(Logged, { render: function (on) { return [
+  h(UI.ValueBox, { key: 1, value: 0.5, step: 0.01, onChange: on("weight") }),
+  h(UI.ValueBox, { key: 2, value: 0.1, step: 0.01, unit: "s", onChange: on("adsr1_r") }),
+  h(UI.ValueBox, { key: 3, value: 2000, step: 1, unit: "Hz", onChange: on("cutoff") })
+]; } }));
+</script>
+</body>
+</html>

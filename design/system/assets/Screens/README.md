@@ -1,0 +1,1 @@
+Screens of the Random Spline Waves instrument. `live-index.png` is the running page (1920px wide at 125% scale); `instrument-v2.png` is the same page rebuilt from the components; `instrument-v1.png` is the first mock-up, kept for reference only.

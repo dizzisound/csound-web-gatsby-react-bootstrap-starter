@@ -1,0 +1,22 @@
+<!-- @dsCard group="Layout" height=260 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>SubPanel preview</title></head>
+<body style="margin:0;background:var(--cs-bg)">
+<div id="root"></div>
+<script>
+var UI = window.CsoundWebUI, h = React.createElement;
+// shows what a widget would send to its Csound channel
+function Logged(props) {
+  var s = React.useState(props.initial || ""), log = s[0], setLog = s[1];
+  return h("div", { className: "cs-stage" }, props.render(function (id) { return function (v) { setLog(id + " \u2192 " + JSON.stringify(v)); }; }),
+    h("div", { className: "cs-log", "aria-live": "polite" }, log || "Drag or type to change a value"));
+}
+ReactDOM.createRoot(document.getElementById("root")).render(h(Logged, { render: function (on) { return h(UI.Panel, { label: "waves" }, [0, 1, 2].map(function (i) {
+  return h(UI.SubPanel, { key: i, label: "wave " + i },
+    h(UI.Knob, { label: "steps", min: 4, max: 16, step: 1, defaultValue: 10, onChange: on("wavesteps_" + i) }),
+    h(UI.NumberInput, { label: "seed", min: 1, max: 100000, step: 1, size: 4, defaultValue: 11 + i, onChange: on("waveseed_" + i) }));
+})); } }));
+</script>
+</body>
+</html>

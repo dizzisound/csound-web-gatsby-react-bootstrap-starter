@@ -1,0 +1,18 @@
+<!-- @dsCard group="Read-outs" height=80 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Label preview</title></head>
+<body style="margin:0;background:var(--cs-bg)">
+<div id="root"></div>
+<script>
+var UI = window.CsoundWebUI, h = React.createElement;
+// shows what a widget would send to its Csound channel
+function Logged(props) {
+  var s = React.useState(props.initial || ""), log = s[0], setLog = s[1];
+  return h("div", { className: "cs-stage" }, props.render(function (id) { return function (v) { setLog(id + " \u2192 " + JSON.stringify(v)); }; }),
+    h("div", { className: "cs-log", "aria-live": "polite" }, log || "Drag or type to change a value"));
+}
+ReactDOM.createRoot(document.getElementById("root")).render(h("div", { className: "cs-stage" }, h(UI.Label, null, "steps"), h(UI.Label, { tooltip: "ctrl:7 osc:/rsw/amp" }, "amp"), h(UI.Label, null, "reverb")));
+</script>
+</body>
+</html>
