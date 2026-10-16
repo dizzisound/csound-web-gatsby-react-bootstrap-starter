@@ -75,3 +75,6 @@ tutorial.md
 
 # Claude Code worktrees
 .claude/worktrees/
+
+# Claude Code conversation exports (contain personal details)
+conversation-export*.md
