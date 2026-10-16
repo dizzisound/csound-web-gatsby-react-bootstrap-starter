@@ -31,6 +31,8 @@ class Fader extends React.Component {
       touchAction: "none",
     }
     this.decimalScale = Util.decimalsOf(this.props.def.step)
+    // decimals of the values sent to Csound (taken before `log` overrides step)
+    this.outDecimals = this.props.def.step ? this.decimalScale : 6
     if (this.props.def.log === true) {
       this.domain = [0, 1]
       this.factor = Math.log(this.props.def.max / this.props.def.min)
@@ -65,20 +67,35 @@ class Fader extends React.Component {
   componentDidMount() {
   }
 
+  // The only way values leave the fader: rounded to the step's precision (the
+  // slider's step arithmetic adds float noise such as 0.7000000000000001).
+  // Explicit sets (defaults, presets, MIDI, OSC, typing) always go out; the
+  // slider's onUpdate is skipped when it only echoes the value just sent.
+  // (Sends before Csound is running are dropped upstream, so an explicit set
+  // must never be de-duplicated against them.)
+  send(value, explicit = false) {
+    const out = Number(Number(value).toFixed(this.outDecimals))
+    if (!explicit && out === this.lastSent) return
+    this.lastSent = out
+    this.props.onChange(this.props.def.id, out)
+  }
+
   onUpdate = updates => {
     this.setState({ updates })
-    this.props.onChange(this.props.def.id, this.toVal(updates[0]))
+    this.send(this.toVal(updates[0]))
   }
 
   onChange = values => {
     this.setState({ values })
   }
-  onTextValueChange = vals => {
+  // only typing in the value box counts; its own display updates (source "prop") don't
+  onTextValueChange = (vals, { source }) => {
+    if (source !== "event" || vals.floatValue === undefined) return
     this.setValue(vals.floatValue)
   }
   setValue = (value) => {
     let val = this.fromVal(value)
-    this.props.onChange(this.props.def.id, value)
+    this.send(value, true)
     if (val === Math.floor(this.state.values[0] * 1000) / 1000) return
     let values = this.state.values.slice(0)
     values[0] = this.fromVal(value)
