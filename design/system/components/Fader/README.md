@@ -18,3 +18,4 @@ A vertical slider with a label above and an editable ValueBox below.
 - Rail: 10px wide `cs-bg` well with `cs-border`, `radius-input`. Handle: 24 × 10, `cs-blue`, `handle-border`, `handle-shadow`. No filled track.
 - Column: min-width 3.5rem, `space-1` padding and gap.
 - The handle at the extremes overhangs the rail by half its height, as in the code.
+- Values sent to Csound are rounded to `step`, and each change is sent once (slider echoes are skipped).

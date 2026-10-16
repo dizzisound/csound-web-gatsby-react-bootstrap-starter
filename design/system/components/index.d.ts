@@ -53,7 +53,7 @@ export declare function Select<T = number>(props: SelectProps<T>): React.ReactEl
 
 export interface XY { x: number; y: number }
 export interface XYPadProps extends ValueProps<XY> { minX?: number; maxX?: number; minY?: number; maxY?: number; step?: number; size?: number; sum?: boolean; label?: string }
-/** Square pad sending two values; `sum` keeps the dot in the lower-left triangle. */
+/** Square pad sending two values; `sum` keeps the dot in the top-left half (x + y within the range). */
 export declare function XYPad(props: XYPadProps): React.ReactElement;
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> { variant?: 'secondary' | 'primary' | 'warning'; icon?: 'save' | 'load' | 'keyboard' }
