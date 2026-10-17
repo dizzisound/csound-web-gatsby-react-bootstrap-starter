@@ -84,7 +84,7 @@ class Instrument extends React.Component {
 
   setValues(values) {
     Object.keys(values).forEach(key => {
-      this.components[key] && this.components[key].changeValue(values[key])
+      this.components[key] && this.components[key].changeValue && this.components[key].changeValue(values[key])
     })
   }
 

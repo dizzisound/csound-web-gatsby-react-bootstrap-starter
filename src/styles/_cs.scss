@@ -199,3 +199,7 @@ $mynewcolor: $cs-blue;
 // XY pad and plots: dark well with a thin border (the dot/line colours come
 // from the palette via Util.cssColor)
 .xypad { background-color: $cs-bg; border: 1px solid $cs-border; border-radius: 4px; padding: 0; }
+.scope { background-color: $cs-bg; border: 1px solid $cs-border; border-radius: 4px; padding: 0; overflow: hidden; flex: 0 0 auto; width: auto; }
+.scopehead { align-items: center; margin-bottom: $cs-space-1; }
+.scopemodes { display: flex; justify-content: flex-end; gap: $cs-space-1; }
+.scopemodes .btn { padding: 0 $cs-space-2; font-size: 0.75rem; }

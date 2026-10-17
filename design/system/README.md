@@ -53,6 +53,7 @@ The instrument root takes keyboard focus for computer-keyboard notes; its focus 
 ## Building a widget
 
 - Every widget `id` is a Csound channel read with `chnget`; the widget sets `def.changeValue` and calls `onChange(id, value)` so defaults, presets, MIDI CC and OSC reach it.
+- Display widgets (the scope) are the exception: they only read Csound's output and send nothing. Draw them as a `cs-bg` well with a `cs-border` outline like the XY pad, the trace in `cs-accent` and guides in `cs-surface-2`.
 - Style new widgets from the tokens above; keep global CSS in `src/styles` and pure ASCII.
 
 ## Using the components

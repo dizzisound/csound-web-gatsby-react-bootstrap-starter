@@ -102,6 +102,11 @@ const IndexPage = () => {
           { id: "rev", type: "fader", label: "reverb", min: 0, max: 1, step: 0.01, defval: 0.6, height: 200 },
         ],
       },
+      {
+        type: "panel", label: "output", id: "output", widgets: [
+          { id: "scope", type: "scope", label: "scope", width: 300, height: 176, gain: 4 },
+        ],
+      },
     ],
   }
   const tunings = [

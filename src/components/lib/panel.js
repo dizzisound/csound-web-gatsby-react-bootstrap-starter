@@ -9,6 +9,7 @@ import Toggle from "./toggle"
 import Adsr from "./adsr"
 import XYPad from "./xy"
 import PanelSwitch from "./panelswitch"
+import Scope from "./scope"
 
 class Panel extends React.Component {
 
@@ -97,6 +98,11 @@ class Panel extends React.Component {
               <Adsr def={component} key={component.id} onChange={this.onChange.bind(this)}/>
             )
             break;
+          case "scope":
+            components.push(
+              <Scope def={component} key={component.id} />
+            )
+            break
           default:
             if (component.func) {
               let comp = component.func(component, this.onChange.bind(this))

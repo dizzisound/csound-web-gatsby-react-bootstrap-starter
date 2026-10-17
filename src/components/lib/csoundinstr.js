@@ -1,6 +1,7 @@
 import React from "react"
 import {Button, Row, Col} from "react-bootstrap"
 import Instrument from "./instrument.js"
+import CsoundContext from "./csoundcontext"
 import HFader from "./hfader"
 import Select from "react-select"
 import OSC from 'osc-js'
@@ -65,6 +66,7 @@ class CsoundInstr extends React.Component {
       octave: 5,
       currentTuning: t,
       osc: 'off', // off | connecting | connected | failed
+      engine: null, // for CsoundContext, set once Csound runs
     }
     this.inst = props.inst
     this.instrument = React.createRef()
@@ -120,6 +122,9 @@ class CsoundInstr extends React.Component {
       this.audioContext = await this.csound.getAudioContext()
       let isStarted = this.audioContext.state === "running"
       this.setState({started: isStarted})
+      // Output node for display widgets such as the scope (see csoundcontext.js)
+      const node = await this.csound.getNode()
+      this.setState({engine: node ? {csound: this.csound, audioContext: this.audioContext, node} : null})
       if (navigator.requestMIDIAccess) {
         console.log("WebMIDI support - yes")
         navigator.requestMIDIAccess().then(this.webMidiInit.bind(this),
@@ -468,8 +473,10 @@ class CsoundInstr extends React.Component {
             </Col>
           </Row>
           <Row><Col>
-            <Instrument osc={this.props.osc} inst={this.inst} onChange={this.handleUpdate.bind(this)}
-                        ref={ref => this.instrument.current = ref}/>
+            <CsoundContext.Provider value={this.state.engine}>
+              <Instrument osc={this.props.osc} inst={this.inst} onChange={this.handleUpdate.bind(this)}
+                          ref={ref => this.instrument.current = ref}/>
+            </CsoundContext.Provider>
           </Col></Row>
           <Row className="g-0 instfooter">
             <Col className="footer-title" md='auto'>Computer keyboard</Col>

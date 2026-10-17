@@ -144,6 +144,11 @@ const IndexPage = () => {
           { id: "rev", type: "fader", label: "reverb", min: 0, max: 1, step: 0.01, defval: 0.6, height: 200 },
         ],
       },
+      {
+        type: "panel", label: "output", id: "output", widgets: [
+          { id: "scope", type: "scope", label: "scope", width: 300, height: 176, gain: 4 },
+        ],
+      },
     ],
   }
   const tunings = [
@@ -427,6 +432,20 @@ The `adsr` component type shows the same four values as knobs with a curve:
 | on | boolean | adds an on/off switch which sends 1 or 0 on `<id>` | no |
 
 `Components.lfo(id, label, amp)` returns a panel with rate (`<id>_rte`, Hz), amplitude (`<id>_amp`), phase (`<id>_phs`) and wave type (`<id>_type`) controls and an on/off switch on `<id>_on`.
+
+#### scope
+A display of what Csound outputs: the waveform, or (with the **spectrum** button) its spectrum on a logarithmic frequency axis from 20 Hz. It reads Csound's output node through a Web Audio `AnalyserNode`, so the `.csd` needs nothing; it has no channel and sends nothing, so presets, MIDI CC and OSC ignore it.
+
+| parameter | type | description | mandatory |
+|------|------|-----------------------------|-------------|
+| type | string | must be 'scope' | yes |
+| id | string | a unique id (not a Csound channel) | yes |
+| label | string | the title shown above the display | no |
+| mode | string | the initial view: 'wave' (default) or 'spectrum' | no |
+| width | number | the width in pixels (default 300) | no |
+| height | number | the height in pixels (default 120) | no |
+| gain | number | scales the wave view, e.g. 4 for a quiet instrument; values beyond ±1 are clipped at the edges (default 1, the real level). The sound and the spectrum are unaffected | no |
+| fftSize | number | analyser size, a power of 2 from 32 to 32768 (default 2048): the wave view shows half of it in samples, the spectrum's resolution grows with it | no |
 
 #### more to come
 combobox, string input, meter, ....

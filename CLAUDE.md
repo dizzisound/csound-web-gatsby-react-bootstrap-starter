@@ -34,7 +34,7 @@ page (src/pages/index.js)
   └─ <CsoundInstr inst csd csoundwasm tunings osc keyboard plugins>   lib/csoundinstr.js
        └─ <Instrument inst onChange>                                   lib/instrument.js
             └─ <Panel def> / <TabPanel def>  (recursive)               lib/panel.js, lib/tabpanel.js
-                 └─ Fader | Knob | Switch | NumberInput | Toggle | XYPad | Adsr | custom
+                 └─ Fader | Knob | Switch | NumberInput | Toggle | XYPad | Adsr | Scope | custom
 ```
 
 - **`CsoundInstr`** owns the Csound engine and all note input. In `componentDidMount` it dynamically imports the Csound ESM bundle by URL (`import(/* webpackIgnore: true */ url)`), fetches the `.csd`, writes it into Csound's virtual FS, compiles and starts it. Widget changes arrive in `handleUpdate(id, val)` and become `setControlChannel` / `setStringChannel` calls; object values (e.g. from `xy`) are fanned out one channel per key.
@@ -47,6 +47,7 @@ Widgets do not expose refs. Instead each widget, in its constructor, attaches a 
 
 - The `inst` object passed to `CsoundInstr` is mutated at render time (`changeValue`, `osc`, `tooltip` with the original text kept as `tooltipBase`, `widgets` generated for a `multifader`, and `step` for `log` faders). Don't freeze it or share one definition object between two widgets.
 - Any new widget must set `def.changeValue` and call `props.onChange(def.id, value)` from it, otherwise defaults, preset loading, MIDI CC and OSC won't reach it.
+- Display widgets are the exception: they send nothing and set no `changeValue` (`Instrument.setValues` skips them). `Scope` (`lib/scope.js`) reads the engine from `CsoundContext` (`lib/csoundcontext.js`), which `CsoundInstr` provides once Csound runs as `{csound, audioContext, node}` (`node` from `csound.getNode()`, the output AudioNode), and taps the output with an `AnalyserNode`. Draw such widgets on a plain `<canvas>` in a `requestAnimationFrame` loop outside React state, and disconnect/cancel on unmount.
 - Defaults are pushed to Csound by `setDefaultValues()` after the engine starts for every widget that defines a `defval`.
 
 ### Contract with the `.csd`
