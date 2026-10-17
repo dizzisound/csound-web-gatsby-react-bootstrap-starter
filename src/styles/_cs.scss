@@ -29,14 +29,19 @@
 
 $mynewcolor: $cs-blue;
 
+// Named arguments: Bootstrap 5's third positional argument is the text colour
+// (it was the hover background in Bootstrap 4), which made the text dark blue.
 .btn-primary {
     @include button-variant(
-        $mynewcolor,
-        color.adjust($mynewcolor, $lightness: -7.5%),
-        color.adjust($mynewcolor, $lightness: -10%),
-        color.adjust($mynewcolor, $lightness: 5%),
-        color.adjust($mynewcolor, $lightness: 10%),
-        color.adjust($mynewcolor, $lightness: -30%)
+        $background: $mynewcolor,
+        $border: color.adjust($mynewcolor, $lightness: -7.5%),
+        $color: #fff,
+        $hover-background: color.adjust($mynewcolor, $lightness: -10%),
+        $hover-border: color.adjust($mynewcolor, $lightness: 5%),
+        $hover-color: #fff,
+        $active-background: color.adjust($mynewcolor, $lightness: 10%),
+        $active-border: color.adjust($mynewcolor, $lightness: -30%),
+        $active-color: #fff
     );
 }
 .patcol { background-color: $cs-surface; border-radius: $cs-radius; padding-bottom: $cs-space-3; }
