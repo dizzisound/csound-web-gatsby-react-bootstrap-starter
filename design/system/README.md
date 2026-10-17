@@ -57,7 +57,7 @@ The instrument root takes keyboard focus for computer-keyboard notes; its focus 
 
 ## Using the components
 
-- Load React 18, `tokens.css`, `components/bundle.css` and `components/bundle.js`; the components are on `window.CsoundWebUI`.
+- Load React 18 or newer as the globals `window.React` / `window.ReactDOM` (from a `<script>` tag that means React 18: React 19 publishes no such browser build), then `tokens.css`, `components/bundle.css` and `components/bundle.js`; the components are on `window.CsoundWebUI`. The app itself runs on React 19.
 - Every control works controlled (`value` + `onChange`) or uncontrolled (`defaultValue`, with `onChange` to listen). Pass `onChange` straight to the Csound channel the widget stands for, as `CsoundInstr.handleUpdate(id, value)` does; XYPad sends `{x, y}`, to fan out on its two channels.
 - Compose an instrument as the code does: `Panel` per sound unit, `SubPanel` for repeated blocks, widgets inside. Use `Panel switchable` for units with an on/off channel.
 - These components reproduce the look and interaction of `src/components/lib` for design and prototyping; the instrument itself still renders with the library in the repository.
