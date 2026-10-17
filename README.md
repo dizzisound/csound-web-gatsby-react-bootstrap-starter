@@ -252,7 +252,7 @@ endin
 - **Computer keyboard**: click the instrument area first. Two rows play notes: `Z S X D C V G B H N J M , L .` (lower) and `Q 2 W 3 E R 5 T 6 Y 7 U I 9 O 0 P [ = ]` (upper); velocity and octave are set in the footer. Keys typed into a number field don't play notes.
 - **Screen keyboard**: **Screen keyboard** opens `src/pages/keyboard.js` in a popup (12edo and just-intonation hexagon layouts, `.scl` files can be loaded).
 - **MIDI** (Chrome, Edge, Opera; Firefox 108+ only with its site-permission add-on, or `dom.webmidi.gated` set to `false` in `about:config`): pick the input device and channel in the status bar. Devices plugged in after the page loaded appear automatically. A widget with a `midictrl` number follows that MIDI CC (scaled into its `min`..`max`).
-- **OSC**: needs a bridge from UDP to WebSocket on `ws://localhost:47100` (see below); click **Connect OSC**. Addresses, with `rsw` being the `osc` namespace:
+- **OSC**: needs the bridge from UDP to WebSocket on `ws://localhost:47100` (`npm run osc-bridge`, see below); click **Connect OSC**. Addresses, with `rsw` being the `osc` namespace:
 
 | address | arguments | effect |
 |---|---|---|
@@ -263,23 +263,30 @@ endin
 
 The xy component takes one coordinate per message: `/rsw/xy/num1 0.5` (`/rsw/<id>/<idx or idy>`).
 
-A minimal bridge with `osc-js` (already a dependency), relaying OSC from UDP port 41234 (e.g. Pure Data's `[netsend -u -b]` after `[oscformat]`) to the page:
+The bridge is included: `npm run osc-bridge` relays OSC from UDP port 41234 to `ws://localhost:47100`, then click **Connect OSC** in the page.
 
-```js
-// osc-bridge.js — run with: node osc-bridge.js
-const OSC = require("osc-js")
-
-const osc = new OSC({
-  plugin: new OSC.BridgePlugin({
-    udpServer: { host: "127.0.0.1", port: 41234 }, // OSC senders send here
-    udpClient: { host: "127.0.0.1", port: 41235 },
-    wsServer: { host: "localhost", port: 47100 },  // the page connects here
-  }),
-})
-
-osc.on("open", () => console.log("OSC bridge: UDP 41234 -> ws://localhost:47100"))
-osc.open()
+```shell
+npm run osc-bridge                     # UDP 41234 -> ws://localhost:47100
+npm run osc-bridge -- --verbose        # also log every relayed message
+npm run osc-bridge -- --udp-port 9000  # receive on another UDP port
 ```
+
+Run `npm run osc-bridge -- --help` for all options (`--host`, `--udp-port`, `--ws-port`, `--reply-port`, `--verbose`).
+
+**Pure Data:** `pd/osc-example.pd` (Pd vanilla 0.48+) connects to the bridge and sends notes, three sliders (`weight`, `amp`, the xy pad's x) and the ADSR on/off switch. The chain is `[oscformat rsw note]` → `[list prepend send]` → `[list trim]` → `[netsend -u -b]`, after a `[connect localhost 41234(` message to `[netsend -u -b]`. The patch connects to `localhost` when it opens; a second box connects to a WSL address instead (see below; edit it to the address the bridge prints). UDP has no handshake, so Pd's "connected" output only means the socket is open: the bridge's `--verbose` log shows whether messages arrive.
+
+**Windows + WSL:** if the project runs in WSL and Pd on Windows, the page reaches the bridge (WSL forwards TCP on `localhost`), but Pd's UDP does not: WSL doesn't forward UDP from Windows' `localhost`, so Pd must send to WSL's IP. Start the bridge with `npm run osc-bridge -- --host 0.0.0.0`, which prints that IP (it can change after a reboot), and use the patch's WSL connect box. Two firewalls may block it, each needing a one-time rule for UDP 41234:
+
+- Windows' Hyper-V firewall for WSL (blocks inbound by default on recent WSL), in PowerShell as Administrator:
+  ```powershell
+  New-NetFirewallHyperVRule -Name "WSL-OSC-Bridge" -DisplayName "WSL OSC bridge (UDP 41234)" -Direction Inbound -VMCreatorId '{40E0AC32-46A5-438A-A0B2-2B479E8F2E90}' -Protocol UDP -LocalPorts 41234
+  ```
+- `ufw` inside WSL, if enabled (`sudo ufw status`):
+  ```shell
+  sudo ufw allow in on eth0 to any port 41234 proto udp comment 'OSC bridge from Windows'
+  ```
+
+WSL's mirrored networking (`networkingMode=mirrored`) also makes `localhost` work for UDP, but it can break other tools such as VS Code's WSL remote.
 
 - **Presets**: **Save preset** downloads the current values as `file.json`; **Load preset** reads such a file back.
 

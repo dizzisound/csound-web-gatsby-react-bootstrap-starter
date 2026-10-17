@@ -15,6 +15,7 @@ npm start            # gatsby develop on 0.0.0.0:8000
 npm run build        # gatsby build -> public/
 npm run serve        # serve the production build
 npm run format       # prettier --write over src/**/*.{js,jsx}
+npm run osc-bridge   # scripts/osc-bridge.js: OSC over UDP 41234 -> ws://localhost:47100 (--help)
 npx gatsby clean     # clear .cache/ and public/ (do this before a deploy build)
 ```
 
@@ -58,7 +59,7 @@ Widgets do not expose refs. Instead each widget, in its constructor, attaches a 
 
 - **Computer keyboard**: `noteMap` in `csoundinstr.js`, key handlers on the focused root `Row` (velocity/octave set by the footer faders).
 - **WebMIDI** (native Web MIDI API, no library): note on/off (note-on with velocity 0 counts as note-off), plus CC mapped to any widget whose definition has a matching `midictrl` number (scaled into `min..max`). One selected input at a time; `refreshMidiDevices()` rebuilds the device list on the `MIDIAccess` `statechange` event, so hot-plugged devices appear and unplugged ones fall back to another input. Firefox gates Web MIDI behind a site-permission add-on regardless of code.
-- **OSC** (enabled by the `osc` prop, a namespace string): `osc-js` WebSocket client to an osc-js bridge on `localhost:47100`, opened only when the user clicks the "Connect OSC" button (no connection attempt at startup). Addresses: `/<osc>/note`, `/<osc>/notefreq`, `/<osc>/<widgetId>[/<subkey>]`.
+- **OSC** (enabled by the `osc` prop, a namespace string): `osc-js` WebSocket client to the osc-js bridge on `localhost:47100` (`scripts/osc-bridge.js`, `npm run osc-bridge`; plain Node, CommonJS, not part of the Gatsby build; `--host 0.0.0.0` for senders outside WSL, which also need the firewall rules for UDP 41234 listed in the README; `pd/osc-example.pd` is a Pure Data sender), opened only when the user clicks the "Connect OSC" button (no connection attempt at startup). Addresses: `/<osc>/note`, `/<osc>/notefreq`, `/<osc>/<widgetId>[/<subkey>]`.
 - **On-screen keyboard** (enabled by the `keyboard` prop): `src/pages/keyboard.js` opens in a popup and renders `KeyboardLayout` → `Terpstra` (Konva canvas). It talks to the instrument page over a `BroadcastChannel` whose name must match on both sides (`keyboard="rsw"` in `index.js` ↔ `name="rsw"` in `keyboard.js`).
 
 ### Build quirks
