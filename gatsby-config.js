@@ -1,12 +1,14 @@
 module.exports = {
-  pathPrefix: "/",
+  // GitHub Pages serves the site under the repository name; applied only by
+  // builds with --prefix-paths (npm run build:pages), so must match the repo name.
+  pathPrefix: "/csound-web-gatsby-react-bootstrap-starter",
   // modern JSX transform (react/jsx-runtime); Gatsby 5 defaults to "classic",
   // which React 19 flags in development as an outdated JSX transform
   jsxRuntime: "automatic",
   siteMetadata: {
     title: `Random Spline Waves | Web Csound Instrument`,
     description: `a web-csound instrument for sound generation`,
-    siteUrl: `https://www.example.com`
+    siteUrl: `https://dizzisound.github.io`
   },
   flags: {
     DEV_SSR: false

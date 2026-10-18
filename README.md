@@ -462,8 +462,11 @@ If the web app is hosted under a subpath:
 - in `gatsby-config.js` set `pathPrefix` to the target path on the web server,
 - then run
 ```shell
-npx gatsby clean && npx gatsby build --prefix-paths
+npx gatsby clean && npm run build:pages
 ```
+(`build:pages` is `gatsby build --prefix-paths`; test the result with `npm run serve:pages`.)
+
+**GitHub Pages:** `.github/workflows/deploy.yml` builds with the prefix and publishes the site on every push to `feature/gatsby5_update` (or by hand from the Actions tab). GitHub serves a project site under the repository name, so `pathPrefix` is `/csound-web-gatsby-react-bootstrap-starter`: change it if you fork or rename the repository. One-time setup: in the repository's **Settings → Pages**, set **Source** to **GitHub Actions**. The site is then at `https://<user>.github.io/<repository>/`.
 
 ### Lowlevel
 To be done.

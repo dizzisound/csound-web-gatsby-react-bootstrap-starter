@@ -14,6 +14,7 @@ Requires Node ≥22 (`engines` in `package.json`, `.nvmrc`). Dependencies alone 
 npm start            # gatsby develop on 0.0.0.0:8000
 npm run build        # gatsby build -> public/
 npm run serve        # serve the production build
+npm run build:pages  # build with pathPrefix (GitHub Pages); serve:pages to test it
 npm run format       # prettier --write over src/**/*.{js,jsx}
 npm run osc-bridge   # scripts/osc-bridge.js: OSC over UDP 41234 -> ws://localhost:47100 (--help)
 npx gatsby clean     # clear .cache/ and public/ (do this before a deploy build)
@@ -23,7 +24,7 @@ There are no tests (`npm test` is a placeholder echo). Verify changes with `npm 
 
 There is no lint script or `.eslintrc`, but `gatsby develop` runs ESLint with Gatsby's built-in config (react-app rules) on every bundled file and prints the warnings in the terminal and the browser console (`[HMR] bundle 'develop' has N warnings`). `gatsby build` does not lint. `src/` is currently warning-free; keep it that way.
 
-Deploying under a subpath: set `pathPrefix` in `gatsby-config.js`, then `gatsby clean && gatsby build --prefix-paths`. This is why static assets are always referenced through `withPrefix(...)`.
+Deploying under a subpath: `pathPrefix` in `gatsby-config.js` (now `/csound-web-gatsby-react-bootstrap-starter`, for GitHub Pages) applies only to `gatsby build --prefix-paths` (`npm run build:pages`); plain `build`/`develop` ignore it. This is why static assets, links and `window.open` URLs are always referenced through `withPrefix(...)` (or Gatsby's `Link`). `.github/workflows/deploy.yml` builds with the prefix and deploys to GitHub Pages on every push to `feature/gatsby5_update`; the repository's Pages source must be set to "GitHub Actions".
 
 ## Architecture
 
