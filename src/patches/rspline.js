@@ -100,7 +100,8 @@ const rspline = {
           },
         ],
       },
-      Components.adsr("adsr1"),
+      // the envelope panel; its on/off switch (channel "adsr1") starts on
+      { ...Components.adsr("adsr1"), defval: 1 },
       {
         type: "panel", label: "master", id: "master", widgets: [
           { id: "amp", type: "fader", label: "amp", min: 0, max: 1, step: 0.01, defval: 0.6, height: 200 },

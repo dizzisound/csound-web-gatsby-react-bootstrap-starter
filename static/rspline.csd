@@ -118,6 +118,7 @@ chnset 0.01,"adsr1_a"
 chnset 0.01,"adsr1_d"
 chnset 1,"adsr1_s"
 chnset 0.07,"adsr1_r"
+chnset 1,"adsr1"
 chnset 0.5,"weight"
 chnset 0.5,"num1"
 chnset 0.5,"num2"
@@ -144,7 +145,13 @@ instr rspline
   id chnget "adsr1_d"
   is chnget "adsr1_s"
   ir chnget "adsr1_r"
-  aenv madsr ia,id,is,ir
+  ; the ADSR panel's on/off switch: off = a plain gate with short fades
+  ion chnget "adsr1"
+  if ion == 1 then
+    aenv madsr ia,id,is,ir
+  else
+    aenv linsegr 0, 0.005, 1, 0.005, 0
+  endif
   aoscL = aoscL * aenv 
   aoscR = aoscR * aenv
 

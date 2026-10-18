@@ -146,7 +146,8 @@ const rspline = {
           },
         ],
       },
-      Components.adsr("adsr1"),
+      // the envelope panel; its on/off switch (channel "adsr1") starts on
+      { ...Components.adsr("adsr1"), defval: 1 },
       {
         type: "panel", label: "master", id: "master", widgets: [
           { id: "amp", type: "fader", label: "amp", min: 0, max: 1, step: 0.01, defval: 0.6, height: 200 },
@@ -199,7 +200,8 @@ The home page and the header menu list every patch. A patch page shows its `titl
 (`Random Spline Waves – Web Csound Instruments`; the site name is `siteMetadata.title` in `gatsby-config.js`).
 Pages set their `<title>` and meta tags with `export const Head` (Gatsby Head API, see `src/components/seo.js`).
 
-The following rules apply:
+The following rules apply. In development (`npm start`), each patch page checks them when it loads and prints a **Patch check** warning in the browser console for every widget whose channel the orchestra never reads, every duplicate widget id, and a missing `trig` or `freqtrig` (`src/components/lib/patchcheck.js`; it reads the `.csd` as text, so channel names built at run time from variables can't be seen, while `sprintf` formats like `"waveseed_%d"` can). Production builds leave the check out.
+
    - The `id` of each component must match a channel name read with `chnget` in the Csound instrument in the `static` folder
        (exceptions: `idx` and `idy` of the xy component, and `<id>_a`, `<id>_d`, `<id>_s`, `<id>_r` of the adsr components).
    - To play the instrument with MIDI, the computer keyboard, the screen keyboard or OSC, the instrument must provide two trigger instruments,

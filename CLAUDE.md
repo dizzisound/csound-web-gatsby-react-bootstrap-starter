@@ -57,6 +57,9 @@ Widgets do not expose refs. Instead each widget, in its constructor, attaches a 
 
 ### Contract with the `.csd`
 
+In development, `CsoundInstr` runs `checkPatch(csdText, inst)` (`lib/patchcheck.js`) after fetching the `.csd` and prints the problems as one `console.warn` ("Patch check, <file>"): widgets whose channel no `chnget`/`chn_*` reads (literal names, `chnget:k("…")`, `sprintf`/`sprintfk` formats), duplicate ids, missing `trig`/`freqtrig`. It is guarded by `process.env.NODE_ENV === "development"`, so production bundles drop it. When adding a widget type that sends on other channels than its `id`, teach `widgetChannels` in `patchcheck.js` about it.
+
+
 - Every widget `id` must equal a channel name read with `chnget` in the orchestra (exceptions: `xy` uses `idx`/`idy`; `Components.adsr(id)` produces `<id>_a/_d/_s/_r`; a panel with `on: true` sends 0/1 on its own `id`).
 - The orchestra must define instruments named `trig` (p4=on/off, p5=MIDI key, p6=velocity) and `freqtrig` (p5=frequency in Hz). It may define `panic`, called by the Panic button/Esc (`hasPanicInstr` is detected from the `.csd` text). `CsoundInstr` plays notes by sending `i "trig" ...` score events in 12edo and `i "freqtrig" ...` when a custom tuning from the `tunings` prop is selected. See `static/rspline.csd`.
 - `static/csound.esm.js` is the vendored, minified `@csound/browser` build (~3.8 MB, README says v6.16.1). It is served as a static asset and deliberately kept out of webpack; don't read or edit it.

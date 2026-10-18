@@ -2,6 +2,7 @@ import React from "react"
 import {Button, Row, Col} from "react-bootstrap"
 import Instrument from "./instrument.js"
 import CsoundContext from "./csoundcontext"
+import checkPatch from "./patchcheck"
 import HFader from "./hfader"
 import Select from "react-select"
 import OSC from 'osc-js'
@@ -133,6 +134,10 @@ class CsoundInstr extends React.Component {
       csound.fs.writeFileSync(csd, buf)
       // optional orchestra instrument called by Panic (see allNotesOff)
       this.hasPanicInstr = /^\s*instr\s+panic\b/m.test(buf)
+      if (process.env.NODE_ENV === "development") {
+        const problems = checkPatch(buf, this.inst)
+        if (problems.length) console.warn(`Patch check, ${csd}:\n- ` + problems.join("\n- "))
+      }
       let result = await csound.compileCsd(csd)
       if (!this.mounted) return
       if (result) {
