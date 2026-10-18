@@ -2,6 +2,8 @@
 This starter can be used to quickly set up a csound-web (v 6.16.1) project developed with Gatsby 5, React 19 and react-bootstrap.
 It ships with a small Csound instrument which generates sound with random spline waves.
 
+**Live demo:** https://dizzisound.github.io/csound-web-gatsby-react-bootstrap-starter/ (click **Start audio** if the browser paused it, then play with the computer keyboard: Z S X D C … or Q 2 W 3 E …).
+
 ## Quick start
 1.  **What you need**
 
