@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A Gatsby 5 / React 19 / react-bootstrap starter for building browser-based Csound instruments (Csound compiled to WASM). A page declares an instrument GUI as a plain JS object; the library in `src/components/lib/` renders it and wires every widget to a Csound control channel. `feature/gatsby5_update` is the main working branch (and GitHub's default branch): work happens on `feature/*` / `fix/*` branches that are fast-forwarded into it; merged branches are kept as archives.
+A Gatsby 5 / React 19 / react-bootstrap starter for building browser-based Csound instruments (Csound compiled to WASM). A page declares an instrument GUI as a plain JS object; the library in `src/components/lib/` renders it and wires every widget to a Csound control channel. Branches: `feature/gatsby5_update` is the stable line (tagged `v1.0.0`; every push to it deploys the GitHub Pages demo). `feature/library_refactoring` is GitHub's default branch and the integration branch for the multi-patch refactoring: its steps are done on `feature/patches_step<N>` branches fast-forwarded into it. Work happens on `feature/*` / `fix/*` branches that are fast-forwarded into their base; merged branches are kept as archives.
 
 ## Commands
 
@@ -38,7 +38,7 @@ page (src/pages/index.js)
                  └─ Fader | Knob | Switch | NumberInput | Toggle | XYPad | Adsr | Scope | custom
 ```
 
-- **`CsoundInstr`** owns the Csound engine and all note input. In `componentDidMount` it dynamically imports the Csound ESM bundle by URL (`import(/* webpackIgnore: true */ url)`), fetches the `.csd`, writes it into Csound's virtual FS, compiles and starts it. Widget changes arrive in `handleUpdate(id, val)` and become `setControlChannel` / `setStringChannel` calls; object values (e.g. from `xy`) are fanned out one channel per key.
+- **`CsoundInstr`** owns the Csound engine and all note input. In `componentDidMount` it dynamically imports the Csound ESM bundle by URL (`import(/* webpackIgnore: true */ url)`), fetches the `.csd`, writes it into Csound's virtual FS, compiles and starts it. The page can unmount during any of those awaits: each one is followed by an `if (!this.mounted) return` checkpoint, the engine stays in a local variable (released in `finally`) until it is complete, and only then becomes `this.csound`. `componentWillUnmount` releases `this.csound` with `CsoundInstr.releaseEngine` (stop, destroy, then close the AudioContext, which `destroy()` leaves running) and closes the keyboard `BroadcastChannel`, MIDI handlers and OSC. Keep new resources inside this lifecycle. Widget changes arrive in `handleUpdate(id, val)` and become `setControlChannel` / `setStringChannel` calls; object values (e.g. from `xy`) are fanned out one channel per key.
 - **`Instrument`** flattens the definition tree into `this.components` keyed by `id`, tracks current values, and implements preset Save/Load as JSON. It is also the target for external control: `setValues`, `setCtrlValue` (MIDI CC), `setDefaultValues`.
 - **`Panel`** is the widget factory: a `switch` on `component.type` picks the React component. Adding a new widget type means adding a case here (or passing a `func(def, onChange)` on the definition, which the `default` case calls for custom components).
 

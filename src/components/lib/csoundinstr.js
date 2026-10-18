@@ -85,68 +85,107 @@ class CsoundInstr extends React.Component {
     for (let k = 1; k <= 16; k++) {
       this.midichannels.push({label: 'Chn ' + k, value: k});
     }
-    if (this.props.keyboard) {
-      this.bc = new BroadcastChannel(this.props.keyboard);
-      this.bc.onmessage = msg => {
-        console.log(msg);
-        if (msg.data.noteon) {
-          this.noteOn(msg.data.noteon);
-        }
-        if (msg.data.noteoff) {
-          this.noteOff(msg.data.noteoff);
-        }
-        if (msg.data.freqon) {
-          this.freqOn(msg.data.freqon.freq,msg.data.freqon.vel);
-        }
-        if (msg.data.freqoff) {
-          this.freqOff(msg.data.freqoff.freq);
-        }
+  }
+
+  // The screen keyboard popup (src/pages/keyboard.js) talks to the page over
+  // this channel; opened on mount and closed on unmount.
+  openKeyboardChannel() {
+    if (!this.props.keyboard) return
+    this.bc = new BroadcastChannel(this.props.keyboard);
+    this.bc.onmessage = msg => {
+      console.log(msg);
+      if (msg.data.noteon) {
+        this.noteOn(msg.data.noteon);
+      }
+      if (msg.data.noteoff) {
+        this.noteOff(msg.data.noteoff);
+      }
+      if (msg.data.freqon) {
+        this.freqOn(msg.data.freqon.freq,msg.data.freqon.vel);
+      }
+      if (msg.data.freqoff) {
+        this.freqOff(msg.data.freqoff.freq);
       }
     }
   }
 
 
+  // Csound loads in several asynchronous steps, and the page can be left
+  // (unmounted) during any of them: after each await, stop if it was. Until
+  // the engine is complete it lives in `csound`, released by the `finally`
+  // below; once in this.csound, componentWillUnmount releases it.
   async componentDidMount() {
-    const url = this.props.csoundwasm
-    const {Csound} = await import(/* webpackIgnore: true */ url)
-    this.csound = await Csound({
-      withPlugins: this.props.plugins,
-    })
-    const csdresp = await fetch(this.props.csd)
-    let buf = await csdresp.text()
-    let csd = this.props.csd.substring(this.props.csd.lastIndexOf("/") + 1)
-    this.csound.fs.writeFileSync(csd, buf)
-    // optional orchestra instrument called by Panic (see allNotesOff)
-    this.hasPanicInstr = /^\s*instr\s+panic\b/m.test(buf)
-    let result = await this.csound.compileCsd(csd)
-    if (result) {
-      this.setState({csoundLoaded: "compiling csd failed"})
-    } else {
-      await this.csound.start()
-      this.setState({csoundLoaded: "running"})
-      this.setState({csndstatus: "dbgreen"})
-      this.props.onStart && this.props.onStart()
-      this.audioContext = await this.csound.getAudioContext()
-      let isStarted = this.audioContext.state === "running"
-      this.setState({started: isStarted})
-      // Output node for display widgets such as the scope (see csoundcontext.js)
-      const node = await this.csound.getNode()
-      this.setState({engine: node ? {csound: this.csound, audioContext: this.audioContext, node} : null})
-      if (navigator.requestMIDIAccess) {
-        console.log("WebMIDI support - yes")
-        navigator.requestMIDIAccess().then(this.webMidiInit.bind(this),
-          this.webMidiErr.bind(this))
+    this.mounted = true
+    this.openKeyboardChannel()
+    let csound
+    try {
+      const url = this.props.csoundwasm
+      const {Csound} = await import(/* webpackIgnore: true */ url)
+      if (!this.mounted) return
+      csound = await Csound({
+        withPlugins: this.props.plugins,
+      })
+      if (!this.mounted) return
+      const csdresp = await fetch(this.props.csd)
+      let buf = await csdresp.text()
+      if (!this.mounted) return
+      let csd = this.props.csd.substring(this.props.csd.lastIndexOf("/") + 1)
+      csound.fs.writeFileSync(csd, buf)
+      // optional orchestra instrument called by Panic (see allNotesOff)
+      this.hasPanicInstr = /^\s*instr\s+panic\b/m.test(buf)
+      let result = await csound.compileCsd(csd)
+      if (!this.mounted) return
+      if (result) {
+        this.csound = csound
+        this.setState({csoundLoaded: "compiling csd failed"})
       } else {
-        console.log("No WebMIDI support")
-        this.setState({midierr: {text: "No WebMIDI", detail: "This browser doesn't support WebMIDI"}})
+        await csound.start()
+        if (!this.mounted) return
+        const audioContext = await csound.getAudioContext()
+        if (!this.mounted) return
+        // Output node for display widgets such as the scope (see csoundcontext.js)
+        const node = await csound.getNode()
+        if (!this.mounted) return
+        this.csound = csound
+        this.audioContext = audioContext
+        this.setState({csoundLoaded: "running"})
+        this.setState({csndstatus: "dbgreen"})
+        this.props.onStart && this.props.onStart()
+        this.setState({started: audioContext.state === "running"})
+        this.setState({engine: node ? {csound, audioContext, node} : null})
+        if (navigator.requestMIDIAccess) {
+          console.log("WebMIDI support - yes")
+          navigator.requestMIDIAccess().then(this.webMidiInit.bind(this),
+            this.webMidiErr.bind(this))
+        } else {
+          console.log("No WebMIDI support")
+          this.setState({midierr: {text: "No WebMIDI", detail: "This browser doesn't support WebMIDI"}})
+        }
       }
+      this.instrument.current.setDefaultValues();
+      this.root.current.focus();
+    } catch (err) {
+      if (!this.mounted) return
+      console.error(err)
+      this.setState({csoundLoaded: "failed to start: " + ((err && err.message) || err)})
+    } finally {
+      if (!this.mounted && csound) CsoundInstr.releaseEngine(csound)
     }
-    this.instrument.current.setDefaultValues();
-    this.root.current.focus();
+  }
 
+  // Stop Csound and free its audio. destroy() silences it but leaves its
+  // AudioContext running, so close that too: otherwise every visit to an
+  // instrument page leaves one behind.
+  static async releaseEngine(csound) {
+    let audioContext
+    try { audioContext = await csound.getAudioContext() } catch (err) { /* not created */ }
+    try { await csound.stop() } catch (err) { /* not started */ }
+    try { await csound.destroy() } catch (err) { console.warn("Csound destroy failed:", err) }
+    if (audioContext && audioContext.state !== "closed") audioContext.close().catch(() => {})
   }
 
   webMidiInit(midiAccess) {
+    if (!this.mounted) return
     console.log("WebMIDI support enabled")
     this.midiAccess = midiAccess
     this.onMidiMessage = this.onMidiEvent.bind(this)
@@ -178,6 +217,7 @@ class CsoundInstr extends React.Component {
   }
 
   webMidiErr(err) {
+    if (!this.mounted) return
     console.log(err);
     // Show the browser's reason, e.g. Firefox's "WebMIDI requires a site
     // permission add-on to activate" or a denied permission prompt.
@@ -230,12 +270,19 @@ class CsoundInstr extends React.Component {
   }
 
   componentWillUnmount() {
+    this.mounted = false
     this.disconnectOsc()
+    if (this.bc) {
+      this.bc.close()
+      this.bc = null
+    }
     if (this.midiAccess) this.midiAccess.onstatechange = null
     if (this.currentInput) this.currentInput.onmidimessage = null
+    this.held.clear()
     if (this.csound) {
-      this.csound.stop()
-      this.csound.destroy()
+      CsoundInstr.releaseEngine(this.csound)
+      this.csound = null
+      this.audioContext = null
     }
   }
 
@@ -278,6 +325,7 @@ class CsoundInstr extends React.Component {
   }
 
   readNoteEvent(target, on, vel) {
+    if (!this.csound) return
     const eventStr = `i "${target.instr}" 0 0.1 ${on} ${target.value} ${vel}`
     console.log(eventStr)
     this.csound.readScore(eventStr)
