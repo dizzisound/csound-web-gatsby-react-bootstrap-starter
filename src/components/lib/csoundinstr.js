@@ -582,7 +582,7 @@ class CsoundInstr extends React.Component {
           </Row>
           <Row><Col>
             <CsoundContext.Provider value={this.state.engine}>
-              <Instrument osc={this.props.osc} inst={this.inst} onChange={this.handleUpdate.bind(this)}
+              <Instrument osc={this.props.osc} inst={this.inst} presetName={this.props.name} onChange={this.handleUpdate.bind(this)}
                           ref={ref => this.instrument.current = ref}/>
             </CsoundContext.Provider>
           </Col></Row>

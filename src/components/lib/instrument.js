@@ -97,7 +97,7 @@ class Instrument extends React.Component {
 
   async download() {
     const myData = this.getValues()
-    const fileName = "file"
+    const fileName = (this.props.presetName ? this.props.presetName + "-" : "") + "preset"
     const json = JSON.stringify(myData)
     const blob = new Blob([json], { type: "application/json" })
     const href = await URL.createObjectURL(blob)

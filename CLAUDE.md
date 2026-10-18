@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A Gatsby 5 / React 19 / react-bootstrap starter for building browser-based Csound instruments (Csound compiled to WASM). A page declares an instrument GUI as a plain JS object; the library in `src/components/lib/` renders it and wires every widget to a Csound control channel. Branches: `feature/gatsby5_update` is the stable line (tagged `v1.0.0`; every push to it deploys the GitHub Pages demo). `feature/library_refactoring` is GitHub's default branch and the integration branch for the multi-patch refactoring: its steps are done on `feature/patches_step<N>` branches fast-forwarded into it. Work happens on `feature/*` / `fix/*` branches that are fast-forwarded into their base; merged branches are kept as archives.
 
+## Patches
+
+Each instrument is a patch: `src/patches/<slug>.js` default-exports `{ slug, title, description, csd, inst, osc?, keyboard?, tunings?, plugins? }`, where `inst` is a function returning the GUI definition (a fresh object per visit, since the library mutates it) and `csd` a file in `static/`. `src/patches/index.js` lists them (home page cards in `src/pages/index.js`, header menu in `components/header.js`; `patchPath(patch)` gives `/patch/<slug>/`). Each patch also has a page, `src/pages/patch/<slug>.js`, rendering `PatchPage`/`PatchHead` from `components/patchpage.js` (plain Gatsby pages, no `createPages`). Switching patch is a page navigation: the old `CsoundInstr` unmounts and releases its engine (see below), the new one starts from scratch. The site name is `siteMetadata.title` ("Web Csound Instruments"); a patch page's tab title is `<title> – <site name>`.
+
 ## Commands
 
 Requires Node ≥22 (`engines` in `package.json`, `.nvmrc`). Dependencies alone need ≥20.19.0 (`sass`, `chokidar`), but Node 20 is end-of-life, so the floor is the 22 LTS. The machine's default `node` may be older — run `nvm use` first.
@@ -31,8 +35,8 @@ Deploying under a subpath: `pathPrefix` in `gatsby-config.js` (now `/csound-web-
 ### Data flow
 
 ```
-page (src/pages/index.js)
-  └─ <CsoundInstr inst csd csoundwasm tunings osc keyboard plugins>   lib/csoundinstr.js
+patch page (src/pages/patch/<slug>.js → components/patchpage.js, definition in src/patches/<slug>.js)
+  └─ <CsoundInstr inst csd csoundwasm tunings osc keyboard plugins name>   lib/csoundinstr.js
        └─ <Instrument inst onChange>                                   lib/instrument.js
             └─ <Panel def> / <TabPanel def>  (recursive)               lib/panel.js, lib/tabpanel.js
                  └─ Fader | Knob | Switch | NumberInput | Toggle | XYPad | Adsr | Scope | custom
@@ -65,7 +69,7 @@ Notes are tracked in `this.held`, a Map from source (`kbd:<code>`, `screen:<note
 - **Computer keyboard**: `noteMap` in `csoundinstr.js`, key handlers on the focused root `Row` (velocity/octave set by the footer faders).
 - **WebMIDI** (native Web MIDI API, no library): note on/off (note-on with velocity 0 counts as note-off), plus CC mapped to any widget whose definition has a matching `midictrl` number (scaled into `min..max`). One selected input at a time; `refreshMidiDevices()` rebuilds the device list on the `MIDIAccess` `statechange` event, so hot-plugged devices appear and unplugged ones fall back to another input. Firefox gates Web MIDI behind a site-permission add-on regardless of code.
 - **OSC** (enabled by the `osc` prop, a namespace string): `osc-js` WebSocket client to the osc-js bridge on `localhost:47100` (`scripts/osc-bridge.js`, `npm run osc-bridge`; plain Node, CommonJS, not part of the Gatsby build; `--host 0.0.0.0` for senders outside WSL, which also need the firewall rules for UDP 41234 listed in the README; `pd/osc-example.pd` is a Pure Data sender), opened only when the user clicks the "Connect OSC" button (no connection attempt at startup). Addresses: `/<osc>/note`, `/<osc>/notefreq`, `/<osc>/<widgetId>[/<subkey>]`.
-- **On-screen keyboard** (enabled by the `keyboard` prop): `src/pages/keyboard.js` opens in a popup and renders `KeyboardLayout` → `Terpstra` (Konva canvas). It talks to the instrument page over a `BroadcastChannel` whose name must match on both sides (`keyboard="rsw"` in `index.js` ↔ `name="rsw"` in `keyboard.js`).
+- **On-screen keyboard** (enabled by the `keyboard` prop): `src/pages/keyboard.js` opens in a popup and renders `KeyboardLayout` → `Terpstra` (Konva canvas). It talks to the instrument page over a `BroadcastChannel` whose name must match on both sides: `KEYBOARD_CHANNEL` (`src/components/keyboardchannel.js`), passed by `PatchPage` when a patch sets `keyboard: true` and used by `keyboard.js`.
 
 ### Build quirks
 
@@ -84,4 +88,4 @@ Notes are tracked in `this.held`, a Map from source (`kbd:<code>`, `screen:<note
 - React 19: `propTypes` are no longer checked at runtime (kept as documentation only), and `defaultProps` only works on class components — use default parameters in function components. `react-numeric-input` was replaced by `lib/spinner.js` (a `NumericFormat` wrapper) for React 19 compatibility.
 - Prettier config: no semicolons, double quotes, 2-space indent, `es5` trailing commas. Existing files are not uniformly formatted — match the file you are editing rather than reformatting it.
 - `src/components/lib/` is a reusable component library with its own LICENSE/README (vendored from a separate "react-components" project); keep app-specific code in `src/pages/` and `src/components/`.
-- The `CsoundInstr` props and the widget definition options (panel, tabpanel, fader/knob, multifader, spinner, xy, select, toggle, adsr, plus the common `midictrl`/`tooltip`) are documented in tables in `README.md`; update them when changing a prop or a widget's definition schema. The README's example page is a copy of `src/pages/index.js`: keep them identical.
+- The `CsoundInstr` props and the widget definition options (panel, tabpanel, fader/knob, multifader, spinner, xy, select, toggle, adsr, plus the common `midictrl`/`tooltip`) are documented in tables in `README.md`; update them when changing a prop or a widget's definition schema. The README's example patch is a copy of `src/patches/rspline.js`: keep them identical.

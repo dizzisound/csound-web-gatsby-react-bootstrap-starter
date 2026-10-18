@@ -6,8 +6,8 @@ module.exports = {
   // which React 19 flags in development as an outdated JSX transform
   jsxRuntime: "automatic",
   siteMetadata: {
-    title: `Random Spline Waves | Web Csound Instrument`,
-    description: `a web-csound instrument for sound generation`,
+    title: `Web Csound Instruments`,
+    description: `Csound instruments in the browser, built with Gatsby and React`,
     siteUrl: `https://dizzisound.github.io`
   },
   flags: {

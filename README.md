@@ -40,19 +40,24 @@ If the browser paused audio, click **▶ Start audio**.
 ## What now?
 
 ### Highlevel
-You can use this starter without any deeper js/react knowhow. The GUI of a Csound instrument is made by filling out a JS object,
-as shown in `src/pages/index.js`:
+You can use this starter without any deeper js/react knowhow. Each instrument is a **patch**: a Csound orchestra (`.csd`) in `static/`
+plus a JS object describing its GUI in `src/patches/`. This is `src/patches/rspline.js`:
 
 ```jsx
-import Layout from "../components/layout"
-import Seo from "../components/seo"
-import CsoundInstr from "../components/lib/csoundinstr"
 import Components from "../components/lib/components"
-import { Row, Col } from "react-bootstrap"
-import { withPrefix } from "gatsby"
 
-const IndexPage = () => {
-  const inst = {
+// Random Spline Waves: four random spline wavetables, morphed by the XY pad
+// and the weight fader. Orchestra: static/rspline.csd.
+const rspline = {
+  slug: "rspline",
+  title: "Random Spline Waves",
+  description: "Four random spline wavetables, morphed with the XY pad and the weight fader.",
+  csd: "rspline.csd", // a file in static/
+  osc: "rsw", // OSC namespace: /rsw/note, /rsw/<widgetId>, ...
+  keyboard: true, // offer the screen keyboard popup
+  // The GUI definition, as a function: the library mutates the object it gets,
+  // so each visit to the page builds a fresh one.
+  inst: () => ({
     components: [
       {
         type: "panel", label: "morph", id: "morph", widgets: [
@@ -154,8 +159,9 @@ const IndexPage = () => {
         ],
       },
     ],
-  }
-  const tunings = [
+  }),
+  // extra tunings for the tuning menu (12edo is always first)
+  tunings: [
     {
       name: "blue",
       basekey: 0,
@@ -174,36 +180,22 @@ const IndexPage = () => {
       basefreq: 4.58333,
       scale: [1, 64 / 63, 9 / 8, 8 / 7, 7 / 6, 4 / 3, 21 / 16, 3 / 2, 32 / 21, 14 / 9, 16 / 9, 7 / 4],
     },
-  ]
-
-  return (
-    <Layout>
-      <Col>
-        <Row>
-          <Col><h2>Random Spline Waves</h2></Col>
-        </Row>
-        <Row>
-          <Col>
-            <CsoundInstr csoundwasm={withPrefix("csound.esm.js")}
-                        inst={inst}
-                        osc="rsw"
-                        keyboard="rsw"
-                        csd={withPrefix("rspline.csd")}
-                        plugins={[]}
-                        tunings={tunings} />
-          </Col>
-        </Row>
-      </Col>
-    </Layout>
-  )
+  ],
 }
 
-export const Head = () => <Seo />
-
-export default IndexPage
+export default rspline
 ```
 
-The page's `<title>` and meta tags come from its `export const Head = () => <Seo />` (Gatsby Head API, see `src/components/seo.js`); pass `title="…"` for a per-page title.
+To add a patch:
+1. Put its orchestra in `static/`, e.g. `static/mypatch.csd`, following the rules below.
+2. Write `src/patches/mypatch.js` like the one above: `slug` (its URL, `/patch/<slug>/`), `title`, `description`, `csd`,
+   the GUI as a function `inst: () => ({ components: [...] })` (see Components), and optionally `osc`, `keyboard`, `tunings` and `plugins` (see CsoundInstr).
+3. Add it to the list in `src/patches/index.js`.
+4. Give it a page: copy `src/pages/patch/rspline.js` to `src/pages/patch/mypatch.js` and import your patch there.
+
+The home page and the header menu list every patch. A patch page shows its `title` as the heading and in the browser tab
+(`Random Spline Waves – Web Csound Instruments`; the site name is `siteMetadata.title` in `gatsby-config.js`).
+Pages set their `<title>` and meta tags with `export const Head` (Gatsby Head API, see `src/components/seo.js`).
 
 The following rules apply:
    - The `id` of each component must match a channel name read with `chnget` in the Csound instrument in the `static` folder
@@ -263,7 +255,8 @@ endin
 | tunings | array | extra tunings for the tuning menu; `12edo` is always first. Each is `{ name, basekey, basefreq, scale }`, with `scale` the 12 frequency ratios of an octave | yes (may be `[]`) |
 | plugins | array | Csound plugins, passed to `Csound({ withPlugins })` | no |
 | osc | string | OSC namespace (e.g. `"rsw"`); shows the **Connect OSC** button | no |
-| keyboard | string | name of the `BroadcastChannel` shared with `src/pages/keyboard.js`; shows the **Screen keyboard** button | no |
+| keyboard | string | name of the `BroadcastChannel` shared with `src/pages/keyboard.js`; shows the **Screen keyboard** button. Patch pages pass `KEYBOARD_CHANNEL` (`src/components/keyboardchannel.js`) when the patch sets `keyboard: true` | no |
+| name | string | used in the preset file name, `<name>-preset.json` (patch pages pass the slug) | no |
 | onStart | function | called once Csound is running | no |
 
 ### Playing and controlling the instrument
@@ -307,7 +300,7 @@ Run `npm run osc-bridge -- --help` for all options (`--host`, `--udp-port`, `--w
 
 WSL's mirrored networking (`networkingMode=mirrored`) also makes `localhost` work for UDP, but it can break other tools such as VS Code's WSL remote.
 
-- **Presets**: **Save preset** downloads the current values as `file.json`; **Load preset** reads such a file back.
+- **Presets**: **Save preset** downloads the current values as `<slug>-preset.json` (e.g. `rspline-preset.json`); **Load preset** reads such a file back.
 
 ### Components
 These options work on several components:
@@ -435,7 +428,7 @@ A button that switches between on and off; it sends true/false on the channel `<
 | label | string | the text of the button | yes |
 
 #### adsr (component) and Components.adsr (panel)
-`Components.adsr(id, height)` returns a ready-made panel with four faders (`<id>_a`, `<id>_d`, `<id>_s`, `<id>_r`, in seconds except S) and an on/off switch on `<id>`, as used in `src/pages/index.js`.
+`Components.adsr(id, height)` returns a ready-made panel with four faders (`<id>_a`, `<id>_d`, `<id>_s`, `<id>_r`, in seconds except S) and an on/off switch on `<id>`, as used in `src/patches/rspline.js`.
 The `adsr` component type shows the same four values as knobs with a curve:
 
 | parameter | type | description | mandatory |
