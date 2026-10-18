@@ -49,7 +49,7 @@ class Knob extends React.Component {
                        angleArc={300} value={this.state.value} onChange={this.handleChange} />
           </Col>
         </Row>
-        {this.props.def.unit ? <Row className="g-0 justify-content-center"><span className="unit">{this.props.def.unit}</span></Row> : null}
+        {this.props.def.unit ? <Row className="g-0 justify-content-center"><Col xs="auto" className="unit">{this.props.def.unit}</Col></Row> : null}
       </Col>
     )
     if (this.props.vertical) {

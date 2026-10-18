@@ -186,6 +186,8 @@ const rspline = {
 export default rspline
 ```
 
+`src/patches/fm.js` (with `static/fm.csd`) is a second, smaller example: a two-operator FM synth whose envelope reuses `Components.adsr` with its own defaults.
+
 To add a patch:
 1. Put its orchestra in `static/`, e.g. `static/mypatch.csd`, following the rules below.
 2. Write `src/patches/mypatch.js` like the one above: `slug` (its URL, `/patch/<slug>/`), `title`, `description`, `csd`,
