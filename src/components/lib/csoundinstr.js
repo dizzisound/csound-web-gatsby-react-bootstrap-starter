@@ -5,7 +5,7 @@ import CsoundContext from "./csoundcontext"
 import HFader from "./hfader"
 import Select from "react-select"
 import OSC from 'osc-js'
-import {KeyboardIcon} from './icons'
+import {KeyboardIcon, SkullIcon} from './icons'
 import {withPrefix} from "gatsby";
 
 const noteMap = {
@@ -75,6 +75,11 @@ class CsoundInstr extends React.Component {
     })
     this.options.unshift(t)
     this.root = React.createRef()
+    // Sounding notes, keyed by where they came from ("kbd:KeyZ", "midi:1:60",
+    // "osc:60", ...), each with the score event its note-on sent. The note-off
+    // replays that event, so moving the octave fader or changing the tuning
+    // while a note is held can't leave its voice running.
+    this.held = new Map()
     this.midichannels = [{label: "All Channels", value: 0}];
     this.state.midichannel = this.midichannels[0];
     for (let k = 1; k <= 16; k++) {
@@ -111,6 +116,8 @@ class CsoundInstr extends React.Component {
     let buf = await csdresp.text()
     let csd = this.props.csd.substring(this.props.csd.lastIndexOf("/") + 1)
     this.csound.fs.writeFileSync(csd, buf)
+    // optional orchestra instrument called by Panic (see allNotesOff)
+    this.hasPanicInstr = /^\s*instr\s+panic\b/m.test(buf)
     let result = await this.csound.compileCsd(csd)
     if (result) {
       this.setState({csoundLoaded: "compiling csd failed"})
@@ -239,16 +246,54 @@ class CsoundInstr extends React.Component {
     return currentTuning.basefreq * currentTuning.scale[note] * Math.pow(2, octave)
   }
 
-  sendNoteEvent(key, vel, on) {
-    let eventStr
+  // Note on/off for MIDI key `key` in the current tuning. `source` identifies
+  // the key that plays it (see this.held); by default the key number itself.
+  sendNoteEvent(key, vel, on, source = "note:" + key) {
+    if (on) this.startNote(source, this.noteTarget(key), vel)
+    else this.stopNote(source)
+  }
 
-    if (this.state.currentTuning.value.name === "12edo") {
-      eventStr = `i "trig" 0 0.1 ${on} ${key} ${vel}`
-    } else {
-      eventStr = `i "freqtrig" 0 0.1 ${on} ${this.getFreq(key)} ${vel}`
-    }
+  // The score event that plays `key`: "trig" with the MIDI key in 12edo,
+  // "freqtrig" with the frequency in any other tuning.
+  noteTarget(key) {
+    if (this.state.currentTuning.value.name === "12edo") return {instr: "trig", value: key}
+    return {instr: "freqtrig", value: this.getFreq(key)}
+  }
+
+  startNote(source, target, vel) {
+    if (!this.csound) return
+    const previous = this.held.get(source)
+    // a second note-on from the same key keeps its voice (as before); one for a
+    // different pitch (tuning changed in between) releases the old one first
+    if (previous && (previous.instr !== target.instr || previous.value !== target.value)) this.stopNote(source)
+    this.held.set(source, target)
+    this.readNoteEvent(target, 1, vel)
+  }
+
+  stopNote(source) {
+    const target = this.held.get(source)
+    if (!target) return
+    this.held.delete(source)
+    this.readNoteEvent(target, 0, 0)
+  }
+
+  readNoteEvent(target, on, vel) {
+    const eventStr = `i "${target.instr}" 0 0.1 ${on} ${target.value} ${vel}`
     console.log(eventStr)
     this.csound.readScore(eventStr)
+  }
+
+  // The computer keyboard's notes, when focus leaves the instrument: their
+  // key-up events would go elsewhere and never stop them.
+  releaseKeyboardNotes() {
+    [...this.held.keys()].filter(source => source.startsWith("kbd:")).forEach(source => this.stopNote(source))
+  }
+
+  // Panic: a note-off for every note this page started, then the orchestra's
+  // optional "panic" instrument for anything else still sounding.
+  allNotesOff() {
+    [...this.held.keys()].forEach(source => this.stopNote(source))
+    if (this.csound && this.hasPanicInstr) this.csound.readScore('i "panic" 0 0.1')
   }
 
   async getChannel(chn) {
@@ -276,10 +321,10 @@ class CsoundInstr extends React.Component {
     switch (event.data[0] & 0xf0) {
       case 0x90:
         // many keyboards send note-on with velocity 0 instead of note-off
-        this.sendNoteEvent(event.data[1], event.data[2], event.data[2] !== 0 ? 1 : 0)
+        this.sendNoteEvent(event.data[1], event.data[2], event.data[2] !== 0 ? 1 : 0, `midi:${chn}:${event.data[1]}`)
         break
       case 0x80:
-        this.sendNoteEvent(event.data[1], event.data[2], 0)
+        this.sendNoteEvent(event.data[1], event.data[2], 0, `midi:${chn}:${event.data[1]}`)
         break
       case 0xB0:
         this.instrument.current.setCtrlValue(event.data[1], event.data[2])
@@ -294,10 +339,11 @@ class CsoundInstr extends React.Component {
     if (pathSplit.length > 2) {
       if (pathSplit[1] === this.props.osc) {
         if (pathSplit[2] === 'note') {
-          this.sendNoteEvent(message.args[1], message.args[2], message.args[0]);
+          this.sendNoteEvent(message.args[1], message.args[2], message.args[0], "osc:" + message.args[1]);
         } else if (pathSplit[2] === 'notefreq') {
-          const eventStr = `i "freqtrig" 0 0.1 ${message.args[0]} ${message.args[1]} ${message.args[2]}`
-          this.csound.readScore(eventStr)
+          const [on, freq, vel] = message.args
+          if (on) this.startNote("oscfreq:" + freq, {instr: "freqtrig", value: freq}, vel)
+          else this.stopNote("oscfreq:" + freq)
         } else {
           if (pathSplit.length > 3)
             this.instrument.current.setValues({[pathSplit[2]]: {[pathSplit[3]]: message.args[0]}});
@@ -337,18 +383,27 @@ class CsoundInstr extends React.Component {
 
   onKeyDown(event) {
     if (event.repeat || this.isTyping(event)) return
-    const note = noteMap[event.nativeEvent.code]
+    const code = event.nativeEvent.code
+    if (code === "Escape") {
+      this.allNotesOff()
+      return
+    }
+    const note = noteMap[code]
     if (note) {
-      this.sendNoteEvent(note - 60 + this.state.octave * 12, this.state.velocity, 1)
+      this.sendNoteEvent(note - 60 + this.state.octave * 12, this.state.velocity, 1, "kbd:" + code)
     }
   }
 
+  // Not filtered by isTyping: a key pressed on the instrument and released in a
+  // text field must still stop its note.
   onKeyUp(event) {
-    if (event.repeat || this.isTyping(event)) return
-    const note = noteMap[event.nativeEvent.code]
-    if (note) {
-      this.sendNoteEvent(note - 60 + this.state.octave * 12, this.state.velocity, 0)
-    }
+    if (event.repeat) return
+    this.stopNote("kbd:" + event.nativeEvent.code)
+  }
+
+  // Focus moved from the instrument to a text field, another window or tab.
+  onRootBlur(event) {
+    if (event.target === event.currentTarget) this.releaseKeyboardNotes()
   }
 
   onVelChange(vel) {
@@ -375,28 +430,24 @@ class CsoundInstr extends React.Component {
 
   noteOn = (note) => {
     if (note) {
-      this.sendNoteEvent(note - 60 + this.state.octave * 12, this.state.velocity, 1);
+      this.sendNoteEvent(note - 60 + this.state.octave * 12, this.state.velocity, 1, "screen:" + note);
     }
   }
   noteOff = (note) => {
     if (note) {
-      this.sendNoteEvent(note - 60 + this.state.octave * 12, this.state.velocity, 0);
+      this.stopNote("screen:" + note);
     }
   }
 
   freqOn = (freq,vel) => {
     if(freq) {
-      const eventStr = `i "freqtrig" 0 0.1 1 ${freq} ${vel}`;
-      console.log(eventStr)
-      this.csound.readScore(eventStr);
+      this.startNote("freq:" + freq, {instr: "freqtrig", value: freq}, vel);
     }
   }
 
   freqOff = (freq) => {
     if(freq) {
-      const eventStr = `i "freqtrig" 0 0.1 0 ${freq} 0`;
-      console.log(eventStr)
-      this.csound.readScore(eventStr);
+      this.stopNote("freq:" + freq);
     }
   }
 
@@ -424,6 +475,7 @@ class CsoundInstr extends React.Component {
     const {options, devices, midichannels} = this
     return (
       <Row className="instroot" tabIndex={0} onKeyDown={this.onKeyDown.bind(this)} onKeyUp={this.onKeyUp.bind(this)}
+           onBlur={this.onRootBlur.bind(this)}
            ref={ref => this.root.current = ref}>
         <Col>
           <Row className="insthead">
@@ -435,6 +487,14 @@ class CsoundInstr extends React.Component {
                           title="The browser paused audio until you interact with the page">&#9654; Start audio</Button> :
                   <StatusBadge level="ok" text="Audio" title="Audio is running" />
                 }
+              </Col>
+            ) : ""}
+            {this.state.csoundLoaded === "running" ? (
+              <Col>
+                <Button size="sm" variant="outline-danger" onClick={this.allNotesOff.bind(this)}
+                        title="All notes off: stops every sounding note (Esc)">
+                  <SkullIcon/> Panic
+                </Button>
               </Col>
             ) : ""}
             {this.state.midi ? (

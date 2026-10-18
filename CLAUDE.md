@@ -54,10 +54,13 @@ Widgets do not expose refs. Instead each widget, in its constructor, attaches a 
 ### Contract with the `.csd`
 
 - Every widget `id` must equal a channel name read with `chnget` in the orchestra (exceptions: `xy` uses `idx`/`idy`; `Components.adsr(id)` produces `<id>_a/_d/_s/_r`; a panel with `on: true` sends 0/1 on its own `id`).
-- The orchestra must define instruments named `trig` (p4=on/off, p5=MIDI key, p6=velocity) and `freqtrig` (p5=frequency in Hz). `CsoundInstr` plays notes by sending `i "trig" ...` score events in 12edo and `i "freqtrig" ...` when a custom tuning from the `tunings` prop is selected. See `static/rspline.csd`.
+- The orchestra must define instruments named `trig` (p4=on/off, p5=MIDI key, p6=velocity) and `freqtrig` (p5=frequency in Hz). It may define `panic`, called by the Panic button/Esc (`hasPanicInstr` is detected from the `.csd` text). `CsoundInstr` plays notes by sending `i "trig" ...` score events in 12edo and `i "freqtrig" ...` when a custom tuning from the `tunings` prop is selected. See `static/rspline.csd`.
 - `static/csound.esm.js` is the vendored, minified `@csound/browser` build (~3.8 MB, README says v6.16.1). It is served as a static asset and deliberately kept out of webpack; don't read or edit it.
 
 ### Note / control inputs (all funnel into `sendNoteEvent` or `Instrument.setValues`)
+
+Notes are tracked in `this.held`, a Map from source (`kbd:<code>`, `screen:<note>`, `midi:<chn>:<key>`, `osc:<key>`, `freq:`/`oscfreq:<Hz>`) to the score event the note-on sent (`startNote`/`stopNote`); the note-off replays it instead of recomputing it from the current octave/tuning. `allNotesOff()` (Panic) stops every held note, then calls the optional `panic` instrument. Root blur releases the `kbd:` notes. New note sources must pass a stable source id.
+
 
 - **Computer keyboard**: `noteMap` in `csoundinstr.js`, key handlers on the focused root `Row` (velocity/octave set by the footer faders).
 - **WebMIDI** (native Web MIDI API, no library): note on/off (note-on with velocity 0 counts as note-off), plus CC mapped to any widget whose definition has a matching `midictrl` number (scaled into `min..max`). One selected input at a time; `refreshMidiDevices()` rebuilds the device list on the `MIDIAccess` `statechange` event, so hot-plugged devices appear and unplugged ones fall back to another input. Firefox gates Web MIDI behind a site-permission add-on regardless of code.

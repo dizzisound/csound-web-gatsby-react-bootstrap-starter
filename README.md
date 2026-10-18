@@ -241,6 +241,15 @@ endin
 ```
 
 `trig` receives p4 = on/off (1/0), p5 = MIDI key, p6 = velocity. `freqtrig` receives a frequency in Hz as p5 instead of a key; it is used when one of the `tunings` is selected.
+A note-off repeats its note-on's p5 (the page remembers what each held key started), so changing the octave or the tuning while a note is held still stops it.
+
+   - Optionally, an instrument named `panic`: the **Panic** button (and the Esc key) calls it with `i "panic" 0 0.1` after sending a note-off for every note the page started, to stop anything else still sounding. `static/rspline.csd` releases all its voices:
+```csound-orc
+instr panic
+  turnoff2 nstrnum("rspline"), 0, 1
+  turnoff
+endin
+```
 
 ### CsoundInstr
 
@@ -256,7 +265,8 @@ endin
 | onStart | function | called once Csound is running | no |
 
 ### Playing and controlling the instrument
-- **Computer keyboard**: click the instrument area first. Two rows play notes: `Z S X D C V G B H N J M , L .` (lower) and `Q 2 W 3 E R 5 T 6 Y 7 U I 9 O 0 P [ = ]` (upper); velocity and octave are set in the footer. Keys typed into a number field don't play notes.
+- **Computer keyboard**: click the instrument area first. Two rows play notes: `Z S X D C V G B H N J M , L .` (lower) and `Q 2 W 3 E R 5 T 6 Y 7 U I 9 O 0 P [ = ]` (upper); velocity and octave are set in the footer. Keys typed into a number field don't play notes. Moving the focus away from the instrument (a text field, another window or tab) releases the notes held on the computer keyboard.
+- **Panic** (the skull button in the status bar, or Esc): stops every sounding note, for a note stuck because its note-off never arrived (e.g. a MIDI cable pulled, an OSC sender stopped mid-note, the screen keyboard closed while a key was held).
 - **Screen keyboard**: **Screen keyboard** opens `src/pages/keyboard.js` in a popup (12edo and just-intonation hexagon layouts, `.scl` files can be loaded).
 - **MIDI** (Chrome, Edge, Opera; Firefox 108+ only with its site-permission add-on, or `dom.webmidi.gated` set to `false` in `about:config`): pick the input device and channel in the status bar. Devices plugged in after the page loaded appear automatically. A widget with a `midictrl` number follows that MIDI CC (scaled into its `min`..`max`).
 - **OSC**: needs the bridge from UDP to WebSocket on `ws://localhost:47100` (`npm run osc-bridge`, see below); click **Connect OSC**. Addresses, with `rsw` being the `osc` namespace:

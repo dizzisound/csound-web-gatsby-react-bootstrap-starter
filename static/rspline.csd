@@ -176,6 +176,14 @@ instr trig
   turnoff
 endin
 
+/* Panic (all notes off): the page calls it from its Panic button and Esc key.
+   Optional in other orchestras. Releases every rspline voice, fractional
+   (per-note) instances included, with its release envelope. */
+instr panic
+  turnoff2 nstrnum("rspline"), 0, 1
+  turnoff
+endin
+
 /* for other tunings */
 instr freqtrig
   insno = nstrnum("rspline") 
