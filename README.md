@@ -4,6 +4,8 @@ It ships with a small Csound instrument which generates sound with random spline
 
 **Live demo:** https://dizzisound.github.io/csound-web-gatsby-react-bootstrap-starter/ (click **Start audio** if the browser paused it, then play with the computer keyboard: Z S X D C … or Q 2 W 3 E …).
 
+What changed in each release: [CHANGELOG.md](CHANGELOG.md).
+
 ## Quick start
 1.  **What you need**
 
