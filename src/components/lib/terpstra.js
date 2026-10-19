@@ -37,7 +37,7 @@ const Terpstra = (props) => {
 
   const [onoff, setOnOff] = useState({});
   const [baseFreq, setBaseFreq] = useState(32.703)
-  const [velocity, setVelocity] = useState(80)
+  const [velocity, setVelocity] = useState(100) // the velocity fader's starting value
   const [mode, setMode] = useState(false)
   const [scale, setScale] = useState(scl);
   const [desc, setDesc] = useState(description)
