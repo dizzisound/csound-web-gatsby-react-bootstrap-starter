@@ -130,15 +130,17 @@ class CsoundInstr extends React.Component {
       const csdresp = await fetch(this.props.csd)
       let buf = await csdresp.text()
       if (!this.mounted) return
+      // the file name, only for messages (the patch check)
       let csd = this.props.csd.substring(this.props.csd.lastIndexOf("/") + 1)
-      csound.fs.writeFileSync(csd, buf)
       // optional orchestra instrument called by Panic (see allNotesOff)
       this.hasPanicInstr = /^\s*instr\s+panic\b/m.test(buf)
       if (process.env.NODE_ENV === "development") {
         const problems = checkPatch(buf, this.inst)
         if (problems.length) console.warn(`Patch check, ${csd}:\n- ` + problems.join("\n- "))
       }
-      let result = await csound.compileCsd(csd)
+      // compile from the text: no file in Csound's virtual file system, whose
+      // API changed between @csound/browser 6.16 (sync) and 6.18 (async)
+      let result = await csound.compileCsdText(buf)
       if (!this.mounted) return
       if (result) {
         this.csound = csound
