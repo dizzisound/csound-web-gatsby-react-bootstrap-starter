@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A Gatsby 5 / React 19 / react-bootstrap starter for building browser-based Csound instruments (Csound compiled to WASM). A page declares an instrument GUI as a plain JS object; the library in `src/components/lib/` renders it and wires every widget to a Csound control channel. Branches: `feature/gatsby5_update` is the stable line (tagged `v1.0.0`; every push to it deploys the GitHub Pages demo). `feature/library_refactoring` is GitHub's default branch and the integration branch for the multi-patch refactoring: its steps are done on `feature/patches_step<N>` branches fast-forwarded into it. Work happens on `feature/*` / `fix/*` branches that are fast-forwarded into their base; merged branches are kept as archives.
+A Gatsby 5 / React 19 / react-bootstrap starter for building browser-based Csound instruments (Csound compiled to WASM). A page declares an instrument GUI as a plain JS object; the library in `src/components/lib/` renders it and wires every widget to a Csound control channel. Branches: `feature/library_refactoring` is GitHub's default branch and the main line: releases are tagged on it (`v1.1.0`, the multi-patch version) and every push to it deploys the GitHub Pages demo. `feature/gatsby5_update` is frozen at `v1.0.0` (the single-instrument version) as an archive. Each piece of work is done on its own branch (e.g. `feature/patches_step<N>`, `release/<version>`) fast-forwarded into `feature/library_refactoring`. Work happens on `feature/*` / `fix/*` branches that are fast-forwarded into their base; merged branches are kept as archives.
 
 ## Patches
 
@@ -28,7 +28,7 @@ There are no tests (`npm test` is a placeholder echo). Verify changes with `npm 
 
 There is no lint script or `.eslintrc`, but `gatsby develop` runs ESLint with Gatsby's built-in config (react-app rules) on every bundled file and prints the warnings in the terminal and the browser console (`[HMR] bundle 'develop' has N warnings`). `gatsby build` does not lint. `src/` is currently warning-free; keep it that way.
 
-Deploying under a subpath: `pathPrefix` in `gatsby-config.js` (now `/csound-web-gatsby-react-bootstrap-starter`, for GitHub Pages) applies only to `gatsby build --prefix-paths` (`npm run build:pages`); plain `build`/`develop` ignore it. This is why static assets, links and `window.open` URLs are always referenced through `withPrefix(...)` (or Gatsby's `Link`). `.github/workflows/deploy.yml` builds with the prefix and deploys to GitHub Pages on every push to `feature/gatsby5_update`; the repository's Pages source must be set to "GitHub Actions".
+Deploying under a subpath: `pathPrefix` in `gatsby-config.js` (now `/csound-web-gatsby-react-bootstrap-starter`, for GitHub Pages) applies only to `gatsby build --prefix-paths` (`npm run build:pages`); plain `build`/`develop` ignore it. This is why static assets, links and `window.open` URLs are always referenced through `withPrefix(...)` (or Gatsby's `Link`). `.github/workflows/deploy.yml` builds with the prefix and deploys to GitHub Pages on every push to `feature/library_refactoring`; the repository's Pages source must be set to "GitHub Actions".
 
 ## Architecture
 

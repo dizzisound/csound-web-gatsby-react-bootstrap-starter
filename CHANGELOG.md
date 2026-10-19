@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.1.0 (2026-10-19)
+
+Several instruments in one site: each **patch** (a Csound orchestra plus its GUI definition) gets its own page, and a second instrument, an FM Synth, joins Random Spline Waves.
+
+**Live demo:** https://dizzisound.github.io/csound-web-gatsby-react-bootstrap-starter/
+
+### New
+
+- **Patches**: an instrument is a file in `src/patches/` (slug, title, description, `.csd`, OSC namespace, tunings, GUI) plus a small page in `src/pages/patch/`; the README explains how to add one. Random Spline Waves now lives at `/patch/rspline/`.
+- **Home page and menu**: the home page lists the instruments, and the header (now "Web Csound Instruments") links to each of them. Browser tabs read "<instrument> – Web Csound Instruments".
+- **FM Synth** (`/patch/fm/`): two-operator FM with ratio and index, a brightness envelope that makes notes start bright and darken, an ADSR, and a scope; OSC namespace `/fm`.
+- **Patch check** (development only): when a patch page loads under `npm start`, the console warns about widgets whose channel the orchestra never reads, duplicate widget ids, and a missing `trig` or `freqtrig` instrument.
+- Presets are saved as `<instrument>-preset.json` (was `file.json`).
+
+### Fixes
+
+- Leaving an instrument page released Csound's sound but left its AudioContext running, one more per visit; leaving while Csound was still loading started it anyway, with a page error. Both are fixed, which makes switching instruments safe.
+- Random Spline Waves: the ADSR panel's on/off switch did nothing; off now plays a plain gate. It starts on, so the default sound is unchanged. The Pd example's `adsr_on` toggle now works too.
+- A knob's unit label was not centered; the panel switch reports its state to screen readers as true/false.
+
+### Changes for developers
+
+- The GUI definition of a patch is a function, `inst: () => ({ components: [...] })`, so each visit gets a fresh object.
+- The screen keyboard and the instrument pages share one channel name, `KEYBOARD_CHANNEL` (`src/components/keyboardchannel.js`), instead of `"rsw"`.
+- `feature/library_refactoring` is the default branch and deploys the demo; `feature/gatsby5_update` stays at 1.0.0.
+
 ## 1.0.0 (2026-10-18)
 
 The first release of this fork of [docB's csound-web-gatsby-react-bootstrap-starter](https://github.com/docb/csound-web-gatsby-react-bootstrap-starter) (2021). It moves the starter to current Gatsby and React, restyles the instrument, fixes long-standing input bugs and adds new ways to play and see it.
@@ -23,7 +49,7 @@ The first release of this fork of [docB's csound-web-gatsby-react-bootstrap-star
 - **OSC bridge**: `npm run osc-bridge` relays OSC from UDP 41234 to the page's WebSocket (`--host`, `--verbose`, `--help`). OSC is opt-in through the **Connect OSC** button.
 - **Pure Data example**: `pd/osc-example.pd` sends notes and widget values, with connect boxes for localhost and for WSL.
 - **MIDI**: devices plugged in after the page loaded appear by themselves; the status bar explains why MIDI is unavailable.
-- **GitHub Pages**: a workflow deploys the site on every push to `feature/gatsby5_update`; `npm run build:pages` and `serve:pages` build and test the prefixed site locally.
+- **GitHub Pages**: a workflow deploys the site on every push to `feature/gatsby5_update` (since 1.1.0: `feature/library_refactoring`); `npm run build:pages` and `serve:pages` build and test the prefixed site locally.
 
 ### Fixes
 

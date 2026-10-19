@@ -4,7 +4,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [feature/gatsby5_update]
+    branches: [feature/library_refactoring]
   workflow_dispatch:
 
 permissions:

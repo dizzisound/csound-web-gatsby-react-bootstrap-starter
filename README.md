@@ -1,8 +1,8 @@
 # csound-web-gatsby-react-bootstrap-starter
 This starter can be used to quickly set up a csound-web (v 6.16.1) project developed with Gatsby 5, React 19 and react-bootstrap.
-It ships with a small Csound instrument which generates sound with random spline waves.
+It ships with two small Csound instruments (patches): Random Spline Waves, which morphs random spline wavetables, and an FM Synth.
 
-**Live demo:** https://dizzisound.github.io/csound-web-gatsby-react-bootstrap-starter/ (click **Start audio** if the browser paused it, then play with the computer keyboard: Z S X D C … or Q 2 W 3 E …).
+**Live demo:** https://dizzisound.github.io/csound-web-gatsby-react-bootstrap-starter/ (pick an instrument, click **Start audio** if the browser paused it, then play with the computer keyboard: Z S X D C … or Q 2 W 3 E …).
 
 What changed in each release: [CHANGELOG.md](CHANGELOG.md).
 
@@ -477,7 +477,7 @@ npx gatsby clean && npm run build:pages
 ```
 (`build:pages` is `gatsby build --prefix-paths`; test the result with `npm run serve:pages`.)
 
-**GitHub Pages:** `.github/workflows/deploy.yml` builds with the prefix and publishes the site on every push to `feature/gatsby5_update` (or by hand from the Actions tab). GitHub serves a project site under the repository name, so `pathPrefix` is `/csound-web-gatsby-react-bootstrap-starter`: change it if you fork or rename the repository. One-time setup: in the repository's **Settings → Pages**, set **Source** to **GitHub Actions**. The site is then at `https://<user>.github.io/<repository>/`.
+**GitHub Pages:** `.github/workflows/deploy.yml` builds with the prefix and publishes the site on every push to `feature/library_refactoring`, the default branch (or by hand from the Actions tab). GitHub serves a project site under the repository name, so `pathPrefix` is `/csound-web-gatsby-react-bootstrap-starter`: change it if you fork or rename the repository. One-time setup: in the repository's **Settings → Pages**, set **Source** to **GitHub Actions**. The site is then at `https://<user>.github.io/<repository>/`.
 
 ### Lowlevel
 To be done.
