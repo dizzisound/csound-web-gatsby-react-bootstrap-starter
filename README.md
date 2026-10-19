@@ -352,7 +352,7 @@ The values sent to Csound are rounded to `step`.
 | max | number | the maximum value | yes |
 | step | number | the precision - use 1 for integer and e.g. 0.01 for floats | yes |
 | defval | number | the default value | yes |
-| unit | string | a unit shown after the value, e.g. `"s"` or `"Hz"` | no |
+| unit | string | a unit, e.g. `"s"` or `"Hz"`: a fader shows it after the value, a knob after its label (`decay (s)`) | no |
 | height | number | the height of the fader (default 256) or knob (default 50) | no |
 | width | number | the width of the knob (default 50) | no |
 | log | boolean | logarithmic scale (`min` must be > 0) | no |

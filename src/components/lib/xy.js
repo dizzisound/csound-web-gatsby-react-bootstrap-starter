@@ -86,15 +86,15 @@ class XY extends React.Component {
     const dx = this.toPixX(this.props.def.defval[this.props.def.idx])
     const dy = this.toPixY(this.props.def.defval[this.props.def.idy])
     return (
-      <Col>
+      <Col xs="auto">
         <Row>
           <Label tooltip={this.axisTooltip(this.props.def.idx)} label="x:"/>
           <Col className="xyvalue">{this.round(this.state.x)}</Col>
           <Label tooltip={this.axisTooltip(this.props.def.idy)} label="y:"/>
           <Col className="xyvalue">{this.round(this.state.y)}</Col>
         </Row>
-        <Row className="g-0">
-          <Col className="xypad">
+        <Row className="g-0 justify-content-center">
+          <Col xs="auto" className="xypad">
             <Stage width={this.h + 2} height={this.h + 2}>
               <Layer>
                 <Circle dragBoundFunc={this.dragBound.bind(this)} onDragMove={this.drag.bind(this)}

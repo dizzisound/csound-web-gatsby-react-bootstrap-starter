@@ -26,7 +26,7 @@ Csound Web UI is the look of browser-based Csound instruments built with the Gat
 - Use the system font stack (`sans`, Bootstrap's default): Segoe UI on Windows, San Francisco on Apple, Roboto on Android. There are no font files.
 - Page: `h2` for the instrument name, `site-brand` above it.
 - Panels: `panel-title` (0.78rem, 600, 0.08em tracking, uppercase) and `subpanel-title` for nested panels.
-- Widgets: `widget-label` above every control, `value` for read-outs with tabular figures, `knob-value` inside knobs, `unit` under knobs, `tick` under hfaders.
+- Widgets: `widget-label` above every control, `value` for read-outs with tabular figures, `knob-value` inside knobs, `unit` after a knob's label in brackets, `tick` under hfaders.
 - Controls: `button-sm`, `badge`.
 
 ## Space and shape
@@ -37,6 +37,8 @@ Csound Web UI is the look of browser-based Csound instruments built with the Gat
 - Shadows only on slider handles (`handle-shadow`) and the ok badge dot (`status-glow`). Elevation otherwise comes from the surface steps.
 
 ## Layout of an instrument
+
+The page frame (`.page-frame`, `layout.js`) fits its content and is centered; on large screens (Bootstrap `lg` and up) it is at least 960px and at most 1720px wide, never wider than the window. The site header sits at the frame's left edge; an instrument's title is centered above it.
 
 1. Status bar (`insthead`): Csound badge, Start audio or the Audio badge, MIDI device and channel dropdowns (or the MIDI badge), the OSC button, and the tuning dropdown pushed to the right. Columns are 24px apart.
 2. Panels (`inst`), `space-3` apart, all the same height.

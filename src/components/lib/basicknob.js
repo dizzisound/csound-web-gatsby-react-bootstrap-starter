@@ -83,11 +83,15 @@ class BasicKnob extends React.Component {
     this.angleOffset = this.props.angleOffset * Math.PI / 180;
     this.startAngle = (1.5 * Math.PI) + this.angleOffset;
     this.endAngle = (1.5 * Math.PI) + this.angleOffset + this.angleArc;
+    // Text size: room for the longest value the knob shows (min or max with
+    // the step's decimals), at least 3 characters; so knobs with similar
+    // ranges get the same size whatever their default value.
+    const decimals = Util.decimalsOf(this.props.step || 1);
     this.digits = this.props.digits || Math.max(
-      String(Math.abs(this.props.min)).length,
-      String(Math.abs(this.props.max)).length,
-      2
-    ) + 1;
+      Math.abs(this.props.min).toFixed(decimals).length,
+      Math.abs(this.props.max).toFixed(decimals).length,
+      3
+    );
   }
 
   componentDidMount() {

@@ -18,7 +18,7 @@ const Layout = ({ children,pageInfo }) => {
       <Container fluid className="page">
         <Row>
           <Col></Col>
-          <Col md="auto">
+          <Col md="auto" className="page-frame">
             <Row>
               <Header siteTitle={data.site.siteMetadata.title} />
             </Row>

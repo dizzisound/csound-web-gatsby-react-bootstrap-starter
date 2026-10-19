@@ -211,10 +211,11 @@
     });
     var f = clamp((v[0] - min) / (max - min), 0, 1);
     var lw = size / 2 * 0.35, r = size / 2 - lw / 2, c = size / 2;
-    var digits = props.digits || Math.max(String(min).length, String(max).length, 2);
+    // as the library's knob: room for the longest value shown, at least 3 characters
+    var digits = props.digits || Math.max(Math.abs(min).toFixed(decimalsOf(step)).length, Math.abs(max).toFixed(decimalsOf(step)).length, 3);
     var text = String(Number(Number(v[0]).toFixed(decimalsOf(step))));
     return h("div", { className: "cs-col colknob" },
-      props.label != null ? h(Label, { tooltip: props.tooltip }, props.label) : null,
+      props.label != null ? h(Label, { tooltip: props.tooltip }, props.unit ? [props.label, " ", h("span", { key: "u", className: "unit" }, "(" + props.unit + ")")] : props.label) : null,
       h("svg", {
         ref: ref, className: "knob", width: size, height: size, viewBox: "0 0 " + size + " " + size,
         tabIndex: 0, role: "slider", "aria-label": props.label, "aria-valuemin": min, "aria-valuemax": max, "aria-valuenow": v[0],
@@ -222,8 +223,7 @@
       },
         h("path", { className: "arc-bg", d: arcPath(0, 1, r, c), fill: "none", strokeWidth: lw }),
         f > 0.001 ? h("path", { className: "arc-value", d: arcPath(0, f, r, c), fill: "none", strokeWidth: lw }) : null,
-        h("text", { x: c, y: c, textAnchor: "middle", dominantBaseline: "central", style: { fontSize: Math.min(20, Math.floor(size / digits * 0.8)) } }, text)),
-      props.unit ? h("span", { className: "unit" }, props.unit) : null);
+        h("text", { x: c, y: c, textAnchor: "middle", dominantBaseline: "central", style: { fontSize: Math.min(20, Math.floor(size / digits * 0.8)) } }, text)));
   }
 
   // number field with up/down buttons, arrow keys and press-and-hold repeat (lib/spinner.js)

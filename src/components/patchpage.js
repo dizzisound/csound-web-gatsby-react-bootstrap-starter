@@ -13,7 +13,7 @@ const PatchPage = ({ patch }) => {
     <Layout>
       <Col>
         <Row>
-          <Col><h2>{patch.title}</h2></Col>
+          <Col><h2 className="text-center">{patch.title}</h2></Col>
         </Row>
         <Row>
           <Col>

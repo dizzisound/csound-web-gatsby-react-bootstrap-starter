@@ -64,6 +64,12 @@ $mynewcolor: $cs-blue;
 // ---- spacing and layout ----
 .page { padding-top: $cs-space-4; padding-bottom: $cs-space-5; }
 .page h2 { margin: $cs-space-2 0 $cs-space-3; }
+// the frame around header and content (layout.js) fits its content; on
+// large screens it is at least 960px and at most 1720px wide
+@include media-breakpoint-up(lg) {
+  // min(): keep Bootstrap's own cap at the available width (no sideways scroll)
+  .page-frame { min-width: 960px; max-width: min(1720px, 100%); }
+}
 
 .instroot { padding-top: $cs-space-2; padding-bottom: $cs-space-2; }
 

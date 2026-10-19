@@ -83,6 +83,7 @@ Notes are tracked in `this.held`, a Map from source (`kbd:<code>`, `screen:<note
 - Gatsby's cache doesn't reliably pick up changes to Sass partials or plugin options: run `npx gatsby clean` before building when checking style changes.
 - JSX: `gatsby-config.js` sets `jsxRuntime: "automatic"` (Gatsby 5 defaults to classic, which React 19 flags in development). `import React` is only needed for hooks/`React.Component`, not for JSX.
 - Design: `design/` holds the Figma files (`csound-web-ui.fig`, `csound-web-ui-v2.fig`) and `design/system/`, a design system generated from the code (`tokens.json` mirrors `_variables.scss`; guidelines in `design/system/README.md`; per-component previews). The code is the source of truth: when changing tokens or widget styles, update `design/system/` to match.
+- Page frame: `components/layout.js` centers a content-sized column (`.page-frame`); from the `lg` breakpoint `_cs.scss` gives it `min-width: 960px` and `max-width: min(1720px, 100%)` (the `min()` keeps Bootstrap's cap at the window width, so wide instruments wrap instead of scrolling). `PatchPage` centers the instrument title.
 - Document head: no react-helmet. Each page exports `Head` (Gatsby Head API) rendering `<Seo title="…" />` from `src/components/seo.js` (title, description from `siteMetadata`, keywords); `<html lang>` is set in `gatsby-ssr.js` (`onRenderBody`). A new page needs its own `export const Head`.
 
 ## Conventions
