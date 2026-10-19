@@ -1,10 +1,11 @@
-import {useRef, useState} from "react"
+import {useEffect, useRef, useState} from "react"
 import {Row, Col, Button} from 'react-bootstrap'
 import {Stage, Layer, Shape} from "react-konva"
 import Alert from './alert'
 import Toggle from './toggle';
 import HFader from './hfader';
 import Spinner from "./spinner"
+import {keyboardMap, keyChar, KEY_ROWS, upFrom, downFrom, downRightFrom, upLeftFrom} from "./hexkeys"
 
 const Terpstra = (props) => {
   const size = 30
@@ -295,7 +296,7 @@ const Terpstra = (props) => {
     return keys;
   }
 
-  const createShape = (id, size, x, y, label, color, md, mu, ts, te) => {
+  const createShape = (id, size, x, y, label, color, md, mu, ts, te, kbd) => {
     return (
       <Shape
         id={id}
@@ -313,7 +314,15 @@ const Terpstra = (props) => {
           context.closePath()
           context.fillStrokeShape(shape)
           context.fillStyle = "black"
-          context.fillText(label, -textWidth / 2, 5)
+          if (kbd) {
+            // the computer key that plays this hexagon, above the note name
+            context.fillText(label, -textWidth / 2, 14)
+            context.setAttr("font", "bold 14px sans-serif")
+            context.fillText(kbd, -context.measureText(kbd).width / 2, -4)
+            context.setAttr("font", "10px sans-serif")
+          } else {
+            context.fillText(label, -textWidth / 2, 5)
+          }
         }}
         hitFunc={(context, shape) => {
           context.beginPath();
@@ -350,11 +359,101 @@ const Terpstra = (props) => {
     default:
       break;
   }
+  // --- the computer keyboard (hexkeys.js) ---
+  const stepsPerOctave = type === 1 ? 31 : type === 2 ? 53 : 12
+  const stepOf = key => key.oct * stepsPerOctave + key.note
+  const hexAt = ([x, y]) => keys["id-" + x + "-" + y]
+  const fits = origin => Object.values(keyboardMap(origin)).every(pos => hexAt(pos))
+  // Where Z starts: on the 12edo tab middle C (like the computer keyboard on
+  // the instrument page), on the jt tabs the 1/1 one octave above the lowest
+  // key (C2 with the default base frequency); the leftmost such hexagon where
+  // every key lands on the grid. Both keep the keys within the 800px popup.
+  const startOrigin = () => {
+    const target = type === 0 ? 12 : stepsPerOctave
+    const candidates = Object.values(keys)
+      .filter(key => stepOf(key) === target)
+      .map(key => key.id.split("-").slice(1).map(Number))
+      .sort((a, b) => a[0] - b[0])
+    return candidates.find(fits) || candidates[0] || [2, 5]
+  }
+  const [origin, setOrigin] = useState(null)
+  const zPos = origin || startOrigin()
+  const keyToId = {}
+  const idToChar = {}
+  Object.entries(keyboardMap(zPos)).forEach(([code, pos]) => {
+    const key = hexAt(pos)
+    if (key) {
+      keyToId[code] = key.id
+      idToChar[key.id] = keyChar(code)
+    }
+  })
+
+  // The listeners are added once per active tab and read the current
+  // keys, mapping and origin through refs.
+  const keysRef = useRef(keys)
+  const keyToIdRef = useRef(keyToId)
+  const zPosRef = useRef(zPos)
+  const allOffRef = useRef(null)
+  keysRef.current = keys
+  keyToIdRef.current = keyToId
+  zPosRef.current = zPos
+  useEffect(() => {
+    if (!props.active) return
+    const held = new Map() // code -> hexagon id, for keys pressed now
+    const releaseHeld = () => {
+      held.forEach(id => keysRef.current[id] && keysRef.current[id].mouseup())
+      held.clear()
+    }
+    const moves = { ArrowUp: upFrom, ArrowDown: downFrom, ArrowRight: downRightFrom, ArrowLeft: upLeftFrom }
+    const onKeyDown = e => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return
+      const t = e.target
+      if (t && (t.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(t.tagName))) return
+      if (e.code === "Escape") {
+        e.preventDefault()
+        releaseHeld()
+        allOffRef.current && allOffRef.current()
+        return
+      }
+      if (moves[e.code]) {
+        // slide the keyboard over the grid, as long as Z stays on it
+        e.preventDefault()
+        const next = moves[e.code](zPosRef.current)
+        if (keysRef.current["id-" + next[0] + "-" + next[1]]) {
+          releaseHeld()
+          setOrigin(next)
+        }
+        return
+      }
+      const id = keyToIdRef.current[e.code]
+      if (!id) return
+      e.preventDefault()
+      if (e.repeat || held.has(e.code)) return
+      held.set(e.code, id)
+      keysRef.current[id].mousedown(e)
+    }
+    const onKeyUp = e => {
+      const id = held.get(e.code)
+      if (!id) return
+      held.delete(e.code)
+      keysRef.current[id] && keysRef.current[id].mouseup()
+    }
+    window.addEventListener("keydown", onKeyDown)
+    window.addEventListener("keyup", onKeyUp)
+    window.addEventListener("blur", releaseHeld) // key-ups would go elsewhere
+    return () => {
+      releaseHeld()
+      window.removeEventListener("keydown", onKeyDown)
+      window.removeEventListener("keyup", onKeyUp)
+      window.removeEventListener("blur", releaseHeld)
+    }
+  }, [props.active])
+
   const shapes = Object.values(keys).map(key => {
     return createShape(key.id, size, key.x, key.y,
       key.label, onoff[key.id] ? "blue" : key.offColor,
       key.mousedown, key.mouseup,
-      key.touchstart, key.touchend)
+      key.touchstart, key.touchend, idToChar[key.id])
   })
 
   const allOff = () => {
@@ -372,6 +471,8 @@ const Terpstra = (props) => {
     })
     setOnOff(prevState => ({...prevState,...tmp}));
   }
+
+  allOffRef.current = allOff
 
   const dofileUpload = useRef();
 
@@ -461,6 +562,10 @@ const Terpstra = (props) => {
         ) : ""}
         <Col style={{margin: 'auto'}} xs="auto">
           <Button size="sm" variant="secondary" onClick={allOff}>All Off</Button>
+        </Col>
+        <Col style={{margin: 'auto'}} xs="auto" className="kbd-hint"
+             title={"Computer keyboard: " + KEY_ROWS.map(row => row.map(keyChar).join(" ")).reverse().join(" / ")}>
+          Keys play the lettered hexagons; arrows move them; Esc: all off
         </Col>
         <Col style={{margin: 'auto', textAlign: 'left'}} xs="auto">{desc}</Col>
       </Row>

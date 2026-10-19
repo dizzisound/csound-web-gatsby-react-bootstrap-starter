@@ -17,7 +17,7 @@ Click an empty part of the instrument (it shows a thin yellow frame when it has 
 
 ## The screen keyboard
 
-**Screen keyboard** (footer, bottom right) opens a hexagonal keyboard in a popup, played with the mouse or by touch (several fingers on a touchscreen). It can play 31 and 53 notes per octave, which the computer keyboard and MIDI can't. See [The screen keyboard](screen-keyboard.md).
+**Screen keyboard** (footer, bottom right) opens a hexagonal keyboard in a popup, played with the mouse, by touch (several fingers on a touchscreen) or with the computer keyboard while the popup has the focus. It can play 31 and 53 notes per octave, which the instrument page's keys and MIDI can't. See [The screen keyboard](screen-keyboard.md).
 
 ## MIDI
 

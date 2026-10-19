@@ -1,7 +1,10 @@
+import {useState} from "react";
 import {Container, Row, Col, Tabs, Tab} from "react-bootstrap";
 import Terpstra from "./terpstra";
 
 const KeyboardLayout = (props) => {
+  // only the visible tab listens to the computer keyboard
+  const [tab, setTab] = useState("keyb12")
   var bc = new BroadcastChannel(props.name);
   const noteOn = note => {
     console.log("post noteon",note)
@@ -33,18 +36,18 @@ const KeyboardLayout = (props) => {
                   </Row>
                   <Row>
                     <Col>
-                      <Tabs defaultActiveKey="keyb12" id="keyboardtabs" className="mb-3">
+                      <Tabs activeKey={tab} onSelect={k => setTab(k)} id="keyboardtabs" className="mb-3">
                         <Tab eventKey="keyb12" title="12edo">
-                          <Terpstra type={0} noteOn={noteOn} noteOff={noteOff}/>
+                          <Terpstra type={0} active={tab === "keyb12"} noteOn={noteOn} noteOff={noteOff}/>
                         </Tab>
                         <Tab eventKey="keyb31" title="31jt">
-                          <Terpstra type={1} freqOn={freqOn} freqOff={freqOff}/>
+                          <Terpstra type={1} active={tab === "keyb31"} freqOn={freqOn} freqOff={freqOff}/>
                         </Tab>
                         <Tab eventKey="keyb53" title="53jt">
-                          <Terpstra type={2} freqOn={freqOn} freqOff={freqOff}/>
+                          <Terpstra type={2} active={tab === "keyb53"} freqOn={freqOn} freqOff={freqOff}/>
                         </Tab>
                         <Tab eventKey="keyb12jt" title="12jt">
-                          <Terpstra type={3} freqOn={freqOn} freqOff={freqOff}/>
+                          <Terpstra type={3} active={tab === "keyb12jt"} freqOn={freqOn} freqOff={freqOff}/>
                         </Tab>
                       </Tabs>
                     </Col>
