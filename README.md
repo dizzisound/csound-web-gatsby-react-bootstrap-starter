@@ -1,5 +1,5 @@
 # csound-web-gatsby-react-bootstrap-starter
-This starter can be used to quickly set up a csound-web (v 6.16.1) project developed with Gatsby 5, React 19 and react-bootstrap.
+This starter can be used to quickly set up a csound-web project (Csound 6.18 as WebAssembly, `@csound/browser` 6.18.7) developed with Gatsby 5, React 19 and react-bootstrap.
 It ships with two small Csound instruments (patches): Random Spline Waves, which morphs random spline wavetables, and an FM Synth.
 
 **Live demo:** https://dizzisound.github.io/csound-web-gatsby-react-bootstrap-starter/ (pick an instrument, click **Start audio** if the browser paused it, then play with the computer keyboard: Z S X D C … or Q 2 W 3 E …).
