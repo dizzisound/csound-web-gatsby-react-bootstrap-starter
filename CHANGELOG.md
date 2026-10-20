@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.2.0 (2026-10-20)
+
+Fine-tuning: a steadier page layout, help pages for players, the screen keyboard playable from the computer keyboard, and Csound 6.18.
+
+**Live demo:** https://dizzisound.github.io/csound-web-gatsby-react-bootstrap-starter/
+
+### New
+
+- **Help pages** in `docs/`, linked from the README: playing without a MIDI keyboard, the tunings (12edo, blue, overtone, monte, and how a tuning maps keys to pitches), and the screen keyboard (its tabs, controls and Scala `.scl` loading).
+- **The screen keyboard plays from the computer keyboard**: 46 keys are mapped onto the hexagons by position (the next key in a row is the next hexagon down-right, the key above-left is the hexagon above), so neighbouring keys play neighbouring notes and chord shapes stay the same everywhere; the hexagons show their key's letter, the arrow keys slide the mapped area and Esc stops all notes. The 31jt, 53jt and 12jt tabs are no longer mouse-only. `docs/screen-keyboard.md` lists the intervals and triad shapes per tab.
+- **Csound 6.18**: the engine moved from Csound 6.16.0 to 6.18.1 (`@csound/browser` 6.18.7, the last of the 6 series). Orchestras are now compiled from their text (`compileCsdText`) instead of through Csound's virtual file system, whose API changed. `docs/csound-engine.md` records the analysis and the checks.
+
+### Changes
+
+- **Page layout**: the page fits its content and is centered, at least 960px and at most 1720px wide on large screens (never wider than the window), so the home page no longer shrinks to a narrow column and Random Spline Waves keeps its panels on one row on wide screens. Instrument titles are centered.
+- **Knobs**: a unit is shown after the label (`decay (s)`) instead of on a row below, and the value's text size depends on the knob's range, so knobs with similar ranges match.
+
+### Fixes
+
+- The XY pad's frame stretched with the window, past the area the marker can reach; it now keeps the pad's size, centered.
+- The screen keyboard's jt tabs played at velocity 80 until their fader (shown at 100) was moved.
+- The README called the previous engine 6.16.1; it was 6.16.0.
+
 ## 1.1.0 (2026-10-19)
 
 Several instruments in one site: each **patch** (a Csound orchestra plus its GUI definition) gets its own page, and a second instrument, an FM Synth, joins Random Spline Waves.

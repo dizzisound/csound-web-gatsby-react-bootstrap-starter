@@ -2,7 +2,7 @@
   "name": "csound-web-gatsby-react-bootstrap-starter",
   "private": true,
   "description": "a gatsby-react-bootstrap-csound instrument",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "docB",
   "dependencies": {
     "bootstrap": "^5.2.3",
